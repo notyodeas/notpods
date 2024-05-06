@@ -160,7 +160,6 @@ void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
   var total = ArgParser();
-  total.addOption('humano', defaultsTo: '= == =');
   total.addOption('obstructionum-directorium');
   total.addOption('max-pervideas', defaultsTo: '51');
   total.addOption('internum-ip', defaultsTo: '127.0.0.1');
@@ -172,14 +171,12 @@ void main(List<String> args) async {
   total.addOption('praemium', defaultsTo: '763000000000000000000');
   total.addOption('incipio-ex');
   total.addOption('furca');
-  total.addOption('ahead', defaultsTo: '= == = = == = ==');
   total.addFlag('partum-key-par');
   total.addFlag('novus-catena');
   total.addFlag('novus');
   total.addFlag('sync-novus');
   total.addFlag('sync-pergo');
   total.addFlag('sync-furca');
-  total.addOption('computatrum', defaultsTo: '= == = ==');
   var eventus = total.parse(args);
   if (eventus['partum-key-par']) {
     final kp = ClavisPar();
