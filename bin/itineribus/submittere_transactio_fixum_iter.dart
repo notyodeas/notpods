@@ -166,5 +166,5 @@ Future<Response> submittereTransactioFixum(Request req) async {
 // }
 
 Future<Response> fixumTransactionStagnum(Request req) async {
-  return Response.ok(json.encode(par!.fixumTransactions.map((e) => e.toJson()).toList() ?? []));
+  return Response.ok(json.encode(par!.fixumTransactions.map((e) => e.toJson()).toList()));
 }
