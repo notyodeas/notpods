@@ -82,8 +82,8 @@ Future<Response> submittereTransactioLiber(Request req) async {
       ReceivePort rp = ReceivePort();
       // liber.interiore.probatur = true;
       isolates.liberTxIsolates[liber.interiore.identitatis] = await Isolate.spawn(Transactio.quaestum, List<dynamic>.from([liber.interiore, rp.sendPort]));
-      rp.listen((transactio) {
-        par!.syncLiberTransaction(transactio as Transactio);
+      rp.listen((transactio) async {
+        await par!.syncLiberTransaction(transactio as Transactio);
       });     
       return Response.ok(json.encode(TransactioSubmittereResponsionis(
               true, liber.interiore.identitatis)

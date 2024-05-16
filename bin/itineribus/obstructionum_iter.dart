@@ -25,7 +25,7 @@ Future<Response> obstructionumPerNumerus(Request req) async {
   final List<int> on = List<int>.from(json.decode(await req.readAsString()));
   try {
     File file = File(
-        'vincula/${argumentis!.obstructionumDirectorium}${Constantes.principalis}/${Constantes.caudices}${(on.length - 1).toString()}.txt');
+        '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}/${Constantes.caudices}${(on.length - 1).toString()}.txt');
     return Response.ok(await Utils.fileAmnis(file)
         .elementAt(on[on.length - 1]));
   } catch (err) {

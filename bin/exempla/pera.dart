@@ -398,7 +398,7 @@ class Pera {
           .any((ischin) => ischin.transactioIdentitatis == element.item2));
       for (int i = 0; i < tx.interiore.outputs.length; i++) {
         if ((tx.interiore.outputs[i].publicaClavis ==
-            privatusClavis.publicKey.toHex() && tx.interiore.certitudo != null && tx.interiore.transactioSignificatio == TransactioSignificatio.regularis) || (tx.interiore.outputs[i].publicaClavis ==
+            privatusClavis.publicKey.toHex() && tx.interiore.certitudo != null && (tx.interiore.transactioSignificatio == TransactioSignificatio.regularis || tx.interiore.transactioSignificatio == TransactioSignificatio.ardeat)) || (tx.interiore.outputs[i].publicaClavis ==
             privatusClavis.publicKey.toHex() && tx.interiore.transactioSignificatio != TransactioSignificatio.regularis)) {
           inOuts.add(Tuple3<int, String, TransactioOutput>(
               i,

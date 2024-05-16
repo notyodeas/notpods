@@ -30,7 +30,7 @@ Future<Response> fossorEfectus(Request req) async {
   FossorPraecipuus fp = FossorPraecipuus();
   fp.accipere(    
     efectus: true, 
-    maxime: 100, 
+    maxime: 4, 
     llt: par!.liberTransactions, 
     lft: par!.fixumTransactions, 
     let: par!.expressiTransactions, 

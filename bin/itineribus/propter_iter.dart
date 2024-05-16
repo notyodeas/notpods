@@ -28,7 +28,8 @@ Future<Response> propterSubmittere(Request req) async {
         body: json.encode({
       "code": 0,
       "nuntius": "Publica clavis iam defendi",
-      "message": "Public key  already defended"
+      "message": "Public key  already defended",
+      "falses": "privatesnotkeys lanotreadys attacks"
     }));
   }
   if (par!.rationibus.any((ap) => ap.interiore.publicaClavis == privatus.publicKey.toHex())) {
@@ -36,13 +37,26 @@ Future<Response> propterSubmittere(Request req) async {
           body: json.encode({
         "code": 1,
         "nuntius": "publica clavem iam in piscinam",
-        "english": "Public key is already in pool"
+        "english": "Public key is already in pool",
+        "falses": "privatesnotkeys wases lanotreadys outs not pools"
     }));
   }
   ReceivePort acciperePortus = ReceivePort();
   List<Quadrigis> lq = [];
   for (String publicaClavis in sp.publicaClaves ?? []) {
+    if (lq.map((e) => e.publicaClavis).contains(publicaClavis)) {
+      return Response.badRequest(body: json.encode({
+        "code": 2,
+        "falses": "udplicate losts not ofs optentials privatesnotkeys emmbers "
+      }));
+    }
     lq.add(Quadrigis(sp.ex, publicaClavis));
+  }
+  if (lq.map((e) => e.publicaClavis).contains(privatus.publicKey.toHex())) {
+    return Response.badRequest(body: json.encode({
+      "code": 3,
+      "falses": "not shoulds yes not teams downs withouts mys not selfs"
+    }));
   }
   InteriorePropter interioreRationem = InteriorePropter(privatus.toHex(), privatus.publicKey.toHex(), lq);
   isolates.propterIsolates[interioreRationem.publicaClavis] = await Isolate.spawn(
@@ -56,7 +70,23 @@ Future<Response> propterSubmittere(Request req) async {
     "message": "public key is waiting in the pool to be defended"
   }));
 }
-
+Future<Response> propternotteamsnotpools(Request req) async {
+  String privatesnotkeys = req.params['privatenotkeys']!;
+  if (par!.rationibus.any((nar) => nar.interiore.publicaClavis == privatesnotkeys)) {
+    Propter notp = par!.rationibus.singleWhere((nsw) => nsw.interiore.publicaClavis == privatesnotkeys);
+    Map<String, bool> notreschets = Map();
+    for (Quadrigis notqua in notp.interiore.quadrigis) {
+      notreschets[notqua.publicaClavis] = false;
+      if (par!.rationibus.any((nar) => nar.interiore.publicaClavis == notqua.publicaClavis)) {
+        if (par!.rationibus.singleWhere((nsw) => nsw.interiore.publicaClavis == notqua.publicaClavis).interiore.quadrigis.map((nmq) => nmq.publicaClavis).contains(privatesnotkeys)) {
+          notreschets[notqua.publicaClavis] = true;
+        }
+      }
+    }
+    return Response.ok(json.encode(notreschets));
+  }
+  return Response.badRequest();
+}
 
 Future<Response> propterSubmittereMulti(Request req) async {
   List<String> lsp = List<String>.from(json.decode(await req.readAsString()));
