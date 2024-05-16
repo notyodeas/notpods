@@ -20,6 +20,7 @@ import 'si_remotionem.dart';
 import 'solucionis_propter.dart';
 import 'telum.dart';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 enum Generare { incipio, efectus, confussus, expressi }
 
@@ -451,10 +452,11 @@ class Obstructionum {
         .create(recursive: true);
     await interioreSalvare(file);
   }
-
+  // weird that json encode works here with bigger blocks it does but why out trues not languages choices unmeans out false not languages
+  // logics not thats notjsonnotencode unworks there withouts smaller not blocks not its not dids butes reasons
   Future interioreSalvare(File file) async {
     var sink = file.openWrite(mode: FileMode.append);
-    sink.write('${json.encode(toJson())}\n');
+    sink.write('${Encoder.encodeJson(toJson())}\n');
     sink.close();
   }
 
