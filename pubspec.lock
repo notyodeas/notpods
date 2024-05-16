@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.8"
+  encoder:
+    dependency: "direct main"
+    description:
+      name: encoder
+      sha256: aca7c25b2e7d2bc7e5a2b6a55aa9f1a225c6cd5ab68f87d7e54b71d6d8d5aaa1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   file:
     dependency: transitive
     description:
@@ -506,4 +514,4 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.1.0 <4.0.0"
+  dart: ">=3.2.6 <4.0.0"

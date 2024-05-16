@@ -99,16 +99,16 @@ Future<Response> submittereTransactioFixum(Request req) async {
           to: st.to,
           transactioStagnum: stagnum,
           lo: lo));      
-        // ReceivePort acciperePortus = ReceivePort();
-        // isolates.fixumTxIsolates[liber.interiore.identitatis] =
-        //     await Isolate.spawn(
-        //         Transactio.quaestum,
-        //         List<dynamic>.from(
-        //             [liber.interiore, acciperePortus.sendPort]));
-        // acciperePortus.listen((transactio) {
-        //   par!.syncFixumTransaction(transactio as Transactio);
-        // });
-        await par!.syncFixumTransaction(liber);
+        ReceivePort acciperePortus = ReceivePort();
+        isolates.fixumTxIsolates[liber.interiore.identitatis] =
+            await Isolate.spawn(
+                Transactio.quaestum,
+                List<dynamic>.from(
+                    [liber.interiore, acciperePortus.sendPort]));
+        acciperePortus.listen((transactio) {
+          par!.syncFixumTransaction(transactio as Transactio);
+        });
+        // await par!.syncFixumTransaction(liber);
         return Response.ok(json.encode(TransactioSubmittereResponsionis(false, liber.interiore.identitatis).toJson()));
     }
   } on BadRequest catch (e) {
