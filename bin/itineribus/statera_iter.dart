@@ -15,6 +15,8 @@ Future<Response> statera(Request req) async {
       '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   String publicaClavis = req.params['publica-clavis']!;
   List<Obstructionum> lo = await Obstructionum.getBlocks(directory);
+  print('blockchain \n');
+  print(lo.map((e) => e.toJson()).toList());
   BigInt stateraLiber = await Pera.statera(true, publicaClavis, lo);
   BigInt stateraFixum = await Pera.statera(false, publicaClavis, lo);
   return Response.ok(

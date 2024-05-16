@@ -328,6 +328,7 @@ class Pera {
     List<Tuple3<int, String, TransactioOutput>> outputs =
         await inconsumptusOutputs(liber, publicKey, lo);
     BigInt balance = BigInt.zero;
+    print('investigatessss ${outputs.map((e) => e.item3)}');
     for (Tuple3<int, String, TransactioOutput> inOut in outputs) {
       print(inOut.item3.pod);
       balance += inOut.item3.pod;

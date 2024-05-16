@@ -16,6 +16,7 @@ import '../exempla/responsio/propter_notitia.dart';
 import '../exempla/utils.dart';
 import 'dart:io';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> propterSubmittere(Request req) async {
   SubmitterePropter sp = SubmitterePropter.fromJson(json.decode(await req.readAsString()));
@@ -129,7 +130,7 @@ Future<Response> propterStatus(Request req) async {
     await for (String obstructionum in Utils.fileAmnis(
         File('${directory.path}${Constantes.caudices}$i.txt'))) {
       obs.add(Obstructionum.fromJson(
-          json.decode(obstructionum) as Map<String, dynamic>));
+          Encoder.decodeJson(obstructionum) as Map<String, dynamic>));
     }
   }
   for (InterioreObstructionum interiore
