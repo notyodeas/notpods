@@ -9,7 +9,7 @@ import 'obstructionum.dart';
 import 'pera.dart';
 import 'package:elliptic/elliptic.dart';
 import 'package:collection/collection.dart';
-
+import 'package:encoder/encoder.dart';
 class Quadrigis {
   final String publicaClavis;
   final String signature;
@@ -61,7 +61,7 @@ class Propter {
 
   Propter.incipio(this.interiore)
       : probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes);
   static void quaestum(List<dynamic> argumentis) {
     InteriorePropter interiorePropter = argumentis[0] as InteriorePropter;
@@ -72,7 +72,7 @@ class Propter {
       do {
         interiorePropter.mine();
         probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiorePropter.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiorePropter.toJson())))
             .bytes);
       } while (!probationem.startsWith('0' * zeros));
       for (int i = zeros + 1; i < probationem.length; i++) {
@@ -98,7 +98,7 @@ class Propter {
   bool isProbationem() {
     if (probationem ==
         HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes)) {
       return true;
     }
@@ -266,7 +266,7 @@ class Gladiator {
   Gladiator(this.probationem, this.interiore);
   Gladiator.nullam(this.interiore)
       : probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes);
   Map<String, dynamic> toJson() => {
         JSON.probationem: probationem,

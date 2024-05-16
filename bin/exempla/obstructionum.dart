@@ -21,6 +21,7 @@ import 'solucionis_propter.dart';
 import 'telum.dart';
 import '../server.dart';
 import 'package:encoder/encoder.dart';
+import 'package:encoder/encoder.dart';
 
 enum Generare { incipio, efectus, confussus, expressi }
 
@@ -333,7 +334,7 @@ class Obstructionum {
   Obstructionum(this.interiore, this.probationem);
   Obstructionum.incipio(this.interiore)
       : probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes);
   static Future efectus(List<dynamic> args) async {
     InterioreObstructionum interioreObstructionum =
@@ -343,7 +344,7 @@ class Obstructionum {
     do {
       interioreObstructionum.mine();
       probationem = HEX.encode(sha512
-          .convert(utf8.encode(json.encode(interioreObstructionum.toJson())))
+          .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
           .bytes);
     } while (!probationem
         .startsWith('0' * interioreObstructionum.obstructionumDifficultas));
@@ -360,7 +361,7 @@ class Obstructionum {
       do {
         interioreObstructionum.mine();
         probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interioreObstructionum.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
             .bytes);
         // print(probationem);
       } while (!probationem
@@ -384,7 +385,7 @@ class Obstructionum {
       do {
         interioreObstructionum.mine();
         probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interioreObstructionum.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
             .bytes);
       } while (!probationem.startsWith('0' *
               (interioreObstructionum.obstructionumDifficultas / 2).floor()) ||
@@ -411,7 +412,7 @@ class Obstructionum {
   bool isProbationem() {
     if (probationem ==
         HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes)) {
       return true;
     }
@@ -461,13 +462,13 @@ class Obstructionum {
   }
 
   static Future<Obstructionum> accipereIncipio(Directory directorium) async {
-    return Obstructionum.fromJson(json.decode(await Utils.fileAmnis(
+    return Obstructionum.fromJson(Encoder.decodeJson(await Utils.fileAmnis(
             File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}0.txt'))
         .first) as Map<String, dynamic>);
   }
 
   static Future<Obstructionum> acciperePrior(Directory directorium) async =>
-      Obstructionum.fromJson(json.decode(await Utils.fileAmnis(File(
+      Obstructionum.fromJson(Encoder.decodeJson(await Utils.fileAmnis(File(
               '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}${(directorium.listSync().isNotEmpty ? directorium.listSync().length - 1 : 0)}.txt'))
           .last) as Map<String, dynamic>);
 
@@ -477,7 +478,7 @@ class Obstructionum {
         File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}${numerus.length - 1}');
     List<String> lines = await Utils.fileAmnis(file).toList();
     return Obstructionum.fromJson(
-        json.decode(lines[numerus.last]) as Map<String, dynamic>);
+        Encoder.decodeJson(lines[numerus.last]) as Map<String, dynamic>);
   }
 
   static Future<List<GladiatorOutput>> utDifficultas(
@@ -515,7 +516,7 @@ class Obstructionum {
       caudices.addAll(await Utils.fileAmnis(
               File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}$i.txt'))
           .map((b) =>
-              Obstructionum.fromJson(json.decode(b) as Map<String, dynamic>))
+              Obstructionum.fromJson(Encoder.decodeJson(b) as Map<String, dynamic>))
           .toList());
     }
     caudices.forEach((obstructionum) {
@@ -554,7 +555,7 @@ class Obstructionum {
   static Future<List<int>> utObstructionumNumerus(
       Obstructionum obstructionum) async {
     Obstructionum co = Obstructionum.fromJson(
-        json.decode(json.encode(obstructionum.toJson())));
+        Encoder.decodeJson(Encoder.encodeJson(obstructionum.toJson())));
     List<int> dif = co.interiore.obstructionumNumerus;
     final int priorObstructionumNumerus = dif[dif.length - 1];
     if (priorObstructionumNumerus < Constantes.maximeCaudicesFile) {
@@ -579,7 +580,7 @@ class Obstructionum {
       await for (String line in Utils.fileAmnis(
           File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}$i.txt'))) {
         obs.add(
-            Obstructionum.fromJson(json.decode(line) as Map<String, dynamic>));
+            Obstructionum.fromJson(Encoder.decodeJson(line) as Map<String, dynamic>));
       }
     }
     return obs;
@@ -588,7 +589,7 @@ class Obstructionum {
     List<Obstructionum> obs = [];
     await for (String line in Utils.fileAmnis(File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.exitus}.txt'))) {
       obs.add(
-          Obstructionum.fromJson(json.decode(line) as Map<String, dynamic>));
+          Obstructionum.fromJson(Encoder.decodeJson(line) as Map<String, dynamic>));
     }
     return obs;
   }
@@ -597,7 +598,7 @@ class Obstructionum {
     await for (String line in Utils.fileAmnis(
         File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.latus}.txt'))) {
       obs.add(
-          Obstructionum.fromJson(json.decode(line) as Map<String, dynamic>));
+          Obstructionum.fromJson(Encoder.decodeJson(line) as Map<String, dynamic>));
     }
     return obs;
   }
@@ -795,7 +796,7 @@ class Obstructionum {
   static Future removereExitus(Obstructionum foramen, Directory directorium) async {
     File f = File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.exitus}.txt');
     List<String> ss = await Utils.fileAmnis(f).toList();
-    ss.removeAt(ss.indexOf(json.encode(foramen.toJson()))); 
+    ss.removeAt(ss.indexOf(Encoder.encodeJson(foramen.toJson()))); 
     
   }
 

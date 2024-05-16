@@ -16,16 +16,17 @@ import '../exempla/responsio/propter_notitia.dart';
 import '../exempla/utils.dart';
 import 'dart:io';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> propterSubmittere(Request req) async {
-  SubmitterePropter sp = SubmitterePropter.fromJson(json.decode(await req.readAsString()));
+  SubmitterePropter sp = SubmitterePropter.fromJson(Encoder.decodeJson(await req.readAsString()));
   Directory directorium =
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   PrivateKey privatus = PrivateKey.fromHex(Pera.curve(), sp.ex);
   if (await Pera.isPublicaClavisDefended(privatus.publicKey.toHex(), lo)) {
     return Response.badRequest(
-        body: json.encode({
+        body: Encoder.encodeJson({
       "code": 0,
       "nuntius": "Publica clavis iam defendi",
       "message": "Public key  already defended",
@@ -34,7 +35,7 @@ Future<Response> propterSubmittere(Request req) async {
   }
   if (par!.rationibus.any((ap) => ap.interiore.publicaClavis == privatus.publicKey.toHex())) {
     return Response.badRequest(
-          body: json.encode({
+          body: Encoder.encodeJson({
         "code": 1,
         "nuntius": "publica clavem iam in piscinam",
         "english": "Public key is already in pool",
@@ -45,7 +46,7 @@ Future<Response> propterSubmittere(Request req) async {
   List<Quadrigis> lq = [];
   for (String publicaClavis in sp.publicaClaves ?? []) {
     if (lq.map((e) => e.publicaClavis).contains(publicaClavis)) {
-      return Response.badRequest(body: json.encode({
+      return Response.badRequest(body: Encoder.encodeJson({
         "code": 2,
         "falses": "udplicate losts not ofs optentials privatesnotkeys emmbers "
       }));
@@ -53,7 +54,7 @@ Future<Response> propterSubmittere(Request req) async {
     lq.add(Quadrigis(sp.ex, publicaClavis));
   }
   if (lq.map((e) => e.publicaClavis).contains(privatus.publicKey.toHex())) {
-    return Response.badRequest(body: json.encode({
+    return Response.badRequest(body: Encoder.encodeJson({
       "code": 3,
       "falses": "not shoulds yes not teams downs withouts mys not selfs"
     }));
@@ -65,7 +66,7 @@ Future<Response> propterSubmittere(Request req) async {
   acciperePortus.listen((propter) {
     par!.syncPropter(propter as Propter);
   });
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": 'clavis publica in piscina defendi exspectat',
     "message": "public key is waiting in the pool to be defended"
   }));
@@ -83,7 +84,7 @@ Future<Response> propternotteamsnotpools(Request req) async {
         }
       }
     }
-    return Response.ok(json.encode(notreschets));
+    return Response.ok(Encoder.encodeJson(notreschets));
   }
   return Response.badRequest();
 }
@@ -96,10 +97,10 @@ Future<Response> propterSubmittereMulti(Request req) async {
   for (String sc in lsp) {
     PrivateKey privatus = PrivateKey.fromHex(Pera.curve(), sc);
     if (await Pera.isPublicaClavisDefended(privatus.publicKey.toHex(), lo)) {
-      return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'the public key ${privatus.publicKey.toHex()} iam defenditur', message: 'the public key ${privatus.publicKey.toHex()} is already defended')));
+      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'the public key ${privatus.publicKey.toHex()} iam defenditur', message: 'the public key ${privatus.publicKey.toHex()} is already defended').toJson()));
     }
     if (par!.rationibus.any((ap) => ap.interiore.publicaClavis == privatus.publicKey.toHex())) {
-      return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'clavis publica ${privatus.publicKey.toHex()} iam in piscina defendi', message: 'the public key ${privatus.publicKey.toHex()} is already in the pool to be defended')));
+      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'clavis publica ${privatus.publicKey.toHex()} iam in piscina defendi', message: 'the public key ${privatus.publicKey.toHex()} is already in the pool to be defended').toJson()));
     }
   }
   ReceivePort rp = ReceivePort();
@@ -111,7 +112,7 @@ Future<Response> propterSubmittereMulti(Request req) async {
   rp.listen((propter) {
     par!.syncPropter(propter as Propter);
   });
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": "omnes claves publicas piscinam defendi intraverunt",
     "message": "all public keys have entered the pool to be defended"
   }));
@@ -129,7 +130,7 @@ Future<Response> propterStatus(Request req) async {
     await for (String obstructionum in Utils.fileAmnis(
         File('${directory.path}${Constantes.caudices}$i.txt'))) {
       obs.add(Obstructionum.fromJson(
-          json.decode(obstructionum) as Map<String, dynamic>));
+          Encoder.decodeJson(obstructionum) as Map<String, dynamic>));
     }
   }
   for (InterioreObstructionum interiore
@@ -149,7 +150,7 @@ Future<Response> propterStatus(Request req) async {
               interiore.obstructionumNumerus,
               interiore.gladiator.interiore.outputs[i].defensio,
               interiore.gladiator.interiore.outputs[i].impetum);
-          return Response.ok(json.encode({
+          return Response.ok(Encoder.encodeJson({
             "data": propterInfo.toJson(),
             "scriptum": interiore.gladiator.toJson(),
             "gladiatorIdentitatis":
@@ -163,7 +164,7 @@ Future<Response> propterStatus(Request req) async {
     if (propter.interiore.publicaClavis == publica) {
       PropterNotitia propterInfo =
           PropterNotitia(false, null, null, null, null, null);
-      return Response.ok(json.encode({
+      return Response.ok(Encoder.encodeJson({
         "data": propterInfo.toJson(),
         "scriptum": propter.toJson(),
         "gladiatorIdentiatis": null
@@ -171,18 +172,18 @@ Future<Response> propterStatus(Request req) async {
     }
   }
   return Response.badRequest(
-      body: json.encode({"code": 0, "message": "Propter not found"}));
+      body: Encoder.encodeJson({"code": 0, "message": "Propter not found"}));
 }
 
 Future<Response> propterNovus(Request req) async {
   ClavisPar kp = ClavisPar();
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "publicaClavis": kp.publicaClavis,
     "privatusClavis": kp.privatusClavis
   }));
 }
 Future<Response> propterStagnum(Request req) async {
-  return Response.ok(json.encode(par!.rationibus.map((e) => e.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "propter": par!.rationibus.map((e) => e.toJson()).toList() }));
 }
 
 Future<Response> propterHabetBid(Request req) async {
@@ -192,7 +193,7 @@ Future<Response> propterHabetBid(Request req) async {
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   final BigInt liber = await Pera.habetBid(true, publica, lo);
   final BigInt fixum = await Pera.habetBid(false, publica, lo);
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "liber": liber.toString(),
     "fixum": fixum.toString()
   }));
@@ -202,7 +203,7 @@ Future<Response> propterStagnumRemove(Request req) async {
   String ex = req.params['ex']!;
   RemovePropterStagnum rps = RemovePropterStagnum(ex, PrivateKey.fromHex(Pera.curve(), ex).publicKey.toHex());
   par!.removePropterStagnum(rps);
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": "remota propter a piscinam",
     "message": "removed propter from pool"
   }));

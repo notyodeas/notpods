@@ -14,36 +14,37 @@ import '../exempla/petitio/submittere_solucionis.dart';
 import '../exempla/solucionis_propter.dart';
 import '../exempla/transactio.dart';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 
 Future<Response> solucionisSubmittereSolocionisPropter(Request req) async {
-  SubmittereSolucionisPropter ssr = SubmittereSolucionisPropter.fromJson(json.decode(await req.readAsString()));
+  SubmittereSolucionisPropter ssr = SubmittereSolucionisPropter.fromJson(Encoder.decodeJson(await req.readAsString()));
   PrivateKey privatus = PrivateKey.fromHex(Pera.curve(), ssr.solucionis);
   String publica = privatus.publicKey.toHex();
   if (publica == ssr.accipientis) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'accipientis clavis adhibetur ut metam solucionis ratio et sicut principalis oratio huius solucionis ratio', message: 'the receiver key is used as a final destination of a payment account and as the main address of this payment account')));
+    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'accipientis clavis adhibetur ut metam solucionis ratio et sicut principalis oratio huius solucionis ratio', message: 'the receiver key is used as a final destination of a payment account and as the main address of this payment account').toJson()));
   }
   InterioreInterioreSolucionisPropter iisp = InterioreInterioreSolucionisPropter(publica, ssr.accipientis);
   InterioreSolucionisPropter isr = InterioreSolucionisPropter(privatus, iisp);
   List<Obstructionum> lo = await Obstructionum.getBlocks(Directory('${Constantes.caudices}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
   if (!isr.estValidus(lo)) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: 'Publica clavis iam usus est ad mercedem Ratio aut est receptaculum et senior solucionis Ratio', message: 'public key is already used for a payment account or is the receiver of an older payment account')));
+    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 1, nuntius: 'Publica clavis iam usus est ad mercedem Ratio aut est receptaculum et senior solucionis Ratio', message: 'public key is already used for a payment account or is the receiver of an older payment account').toJson()));
   }
   ReceivePort rp = ReceivePort();
   isolates.solocionisRationem[publica] = await Isolate.spawn(SolucionisPropter.quaestum, List<dynamic>.from([isr, rp.sendPort]));
   rp.listen((solucionis) { 
     par!.syncSolucionisPropter(solucionis as SolucionisPropter);
   });
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": "solucionis ratio exspectat in stagnum",
     "message": "payment account is waiting in the pool"
   }));
 }
 Response solucionisStagnum(Request req) {
-  return Response.ok(json.encode(par!.solucionisRationibus.map((msp) => msp.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "notsolucionis": par!.solucionisRationibus.map((msp) => msp.toJson()).toList() }));
 }
 Future<Response> solucionisCashEx(Request req) async {
-  SolucionisCashEx sce = SolucionisCashEx.fromJson(await json.decode(await req.readAsString()));
+  SolucionisCashEx sce = SolucionisCashEx.fromJson(await Encoder.decodeJson(await req.readAsString()));
   String publica = PrivateKey.fromHex(Pera.curve(), sce.ex).publicKey.toHex();
   Directory directorium = Directory('${Constantes.caudices}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
@@ -59,7 +60,7 @@ Future<Response> solucionisCashEx(Request req) async {
   rp.listen((transactio) {
     par!.syncLiberTransaction(transactio as Transactio);
   });
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": "solucionis negotium exspectat in stagnum",
     "message": "payment transaction is waiting in the pool",
     "transactioIdentitatis": it.identitatis
@@ -67,20 +68,20 @@ Future<Response> solucionisCashEx(Request req) async {
 }
 
 Future<Response> solucionisSubmittereFissileSolocionisPropter(Request req) async {
-  SubmittereFissileSolucionisPropter sfsr = SubmittereFissileSolucionisPropter.fromJson(json.decode(await req.readAsString()));
+  SubmittereFissileSolucionisPropter sfsr = SubmittereFissileSolucionisPropter.fromJson(Encoder.decodeJson(await req.readAsString()));
   // if (sfsr.fixs.where((wf) => wf.reliquiae).length != 1) {
-  //   return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'certum pretium rationem habere unum superfuit receptoris', message: 'a fixed payment account should have only one left over receiver')));
+  //   return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'certum pretium rationem habere unum superfuit receptoris', message: 'a fixed payment account should have only one left over receiver')));
   // }
   PrivateKey privatus = PrivateKey.fromHex(Pera.curve(), sfsr.solucionis);
   String publica = privatus.publicKey.toHex();
   if (sfsr.fixs.any((af) => af.accipientis == publica)) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'unus accipientis claves sunt sicut finis solutionis ratio et sicut principalis oratio huius solucionis ratio', message: 'one of the receiver keys are used as a final destination of a payment account and as the main address of this payment account')));
+    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'unus accipientis claves sunt sicut finis solutionis ratio et sicut principalis oratio huius solucionis ratio', message: 'one of the receiver keys are used as a final destination of a payment account and as the main address of this payment account').toJson()));
   }
   InterioreInterioreFissileSolucionisPropter iifsp = InterioreInterioreFissileSolucionisPropter(publica, sfsr.reliquiae, sfsr.fixs);
   InterioreFissileSolucionisPropter ifsr = InterioreFissileSolucionisPropter(privatus, iifsp);
   List<Obstructionum> lo = await Obstructionum.getBlocks(Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
   if (!ifsr.estValidus(lo)) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'Publica clavis iam usus est ad mercedem Ratio aut est receptaculum et senior solucionis Ratio', message: 'public key is already used for a payment account or is the receiver of an older payment account')));
+    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'Publica clavis iam usus est ad mercedem Ratio aut est receptaculum et senior solucionis Ratio', message: 'public key is already used for a payment account or is the receiver of an older payment account').toJson()));
   }
   ReceivePort rp = ReceivePort();
   isolates.fissileSolocionisRationem[publica] = await Isolate.spawn(FissileSolucionisPropter.quaestum, List<dynamic>.from([ifsr, rp.sendPort]));
@@ -88,17 +89,17 @@ Future<Response> solucionisSubmittereFissileSolocionisPropter(Request req) async
     print('he! $solucionis');
     par!.syncFissileSolucionisPropter(solucionis as FissileSolucionisPropter);
   });
-  return Response.ok(json.encode({
+  return Response.ok(Encoder.encodeJson({
     "nuntius": "splitted mercedem ratio exspectat in stagnum",
     "message": "splitted payment account is waiting in the pool"
   }));
 }
 Response solucionisFissileStagnum(Request req) {
-  return Response.ok(json.encode(par!.fissileSolucionisRationibus.map((mfsp) => mfsp.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "notpools": par!.fissileSolucionisRationibus.map((mfsp) => mfsp.toJson()).toList() }));
 }
 Future<Response> solucionisFissileCashEx(Request req) async {
   try {
-    SolucionisCashEx sce = SolucionisCashEx.fromJson(await json.decode(await req.readAsString()));
+    SolucionisCashEx sce = SolucionisCashEx.fromJson(await Encoder.decodeJson(await req.readAsString()));
     String publica = PrivateKey.fromHex(Pera.curve(), sce.ex).publicKey.toHex();
     Directory directorium = Directory('vincula/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
     List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
@@ -133,13 +134,13 @@ Future<Response> solucionisFissileCashEx(Request req) async {
         par!.syncLiberTransaction(t);        
       }
     });
-    return Response.ok(json.encode({
+    return Response.ok(Encoder.encodeJson({
       "nuntius": "solucionis transactions exspectant in stagnum",
       "message": "payment transactions are waiting in the pool",
       "transactioIdentitatum": litf.map((mitf) => mitf.identitatis).toList()
     }));
   } on BadRequest catch (br) {
-    return Response.badRequest(body: json.encode(br.toJson()));
+    return Response.badRequest(body: Encoder.encodeJson(br.toJson()));
   }
 
 

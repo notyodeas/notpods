@@ -15,11 +15,12 @@ import '../exempla/transactio.dart';
 import '../exempla/utils.dart';
 import 'package:elliptic/elliptic.dart';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> profundumRetribuere(Request req) async {
   try {
     RetribuereProfundum rp =
-        RetribuereProfundum.fromJson(json.decode(await req.readAsString()));
+        RetribuereProfundum.fromJson(Encoder.decodeJson(await req.readAsString()));
     List<Obstructionum> lo = await Obstructionum.getBlocks(
         Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
     List<SiRemotionem> lsr = [];
@@ -29,7 +30,7 @@ Future<Response> profundumRetribuere(Request req) async {
         rp.signature);
     if (!await Pera.isPublicaClavisDefended(sr.interiore.siRemotionemOutput!.habereIus, lo)) {
       return Response.badRequest(
-          body: json.encode(BadRequest(
+          body: Encoder.encodeJson(BadRequest(
                   code: 1,
                   nuntius: 'clavem publicam quae inscribitur non defenditur',
                   message: 'public key of the entitled is not defended')
@@ -39,7 +40,7 @@ Future<Response> profundumRetribuere(Request req) async {
     PublicKey publica = PublicKey.fromHex(Pera.curve(), pk.publicKey.toHex());
     BigInt limit = Pera.habetBid(true, publica.toHex(), lo);
     if (sr.interiore.siRemotionemOutput!.pod > limit) {
-      return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
+      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD').toJson()));
     }
     SiRemotionemInput sri = SiRemotionemInput(
         Utils.signum(PrivateKey.fromHex(Pera.curve(), rp.ex), sr.interiore),
@@ -64,12 +65,12 @@ Future<Response> profundumRetribuere(Request req) async {
     receivePort.listen((message) {
       par!.syncSiRemotiones(message as SiRemotionem);
     });
-    return Response.ok(json.encode({
+    return Response.ok(Encoder.encodeJson({
       "nuntius": "tuum debth negotium exspectat in stagnum",
       "message": "your debth transaction is waiting in the pool"
     }));
   } on BadRequest catch (br) {
-    return Response.badRequest(body: json.encode(br.toJson()));
+    return Response.badRequest(body: Encoder.encodeJson(br.toJson()));
   }
 }
 
@@ -79,7 +80,7 @@ Future<Response> profundumDebitaHabereIus(Request req) async {
   Directory directorium = Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   Iterable<SiRemotionem> lsr = SiRemotionem.debitaHabereIus(debita, public, lo);
-  return Response.ok(json.encode(lsr.map((mlsr) => mlsr.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "profundum": lsr.map((mlsr) => mlsr.toJson()).toList() }));
 }
 
 // Future<Response> profundumProfundis(Request req) async {
@@ -88,5 +89,5 @@ Future<Response> profundumDebitaHabereIus(Request req) async {
 //   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
 //   List<InterioreSiRemotionem> lisr = [];
 //   lo.map((mlo) => mlo.interiore.siRemotiones.where((wsr) => wsr.interiore.siRemotionemOutput != null && wsr.interiore.siRemotionemOutput!.debetur == publica).map((msr) => msr.interiore)).forEach(lisr.addAll);
-//   return Response.ok(json.encode(lisr.map((e) => e.toJson()).toList()));
+//   return Response.ok(Encoder.encodeJson(lisr.map((e) => e.toJson()).toList()));
 // }

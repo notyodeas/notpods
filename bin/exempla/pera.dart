@@ -13,6 +13,7 @@ import 'obstructionum_arma.dart';
 import 'si_remotionem.dart';
 import 'telum.dart';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 import 'telum_exemplar.dart';
 
@@ -291,10 +292,10 @@ class Pera {
       await for (var line in Utils.fileAmnis(
           File('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}${Constantes.caudices}$i.txt'))) {
         txs.addAll(liber
-            ? Obstructionum.fromJson(json.decode(line) as Map<String, dynamic>)
+            ? Obstructionum.fromJson(Encoder.decodeJson(line) as Map<String, dynamic>)
                 .interiore
                 .liberTransactions
-            : Obstructionum.fromJson(json.decode(line) as Map<String, dynamic>)
+            : Obstructionum.fromJson(Encoder.decodeJson(line) as Map<String, dynamic>)
                 .interiore
                 .fixumTransactions);
       }

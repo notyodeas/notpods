@@ -14,10 +14,11 @@ import '../exempla/si_remotionem.dart';
 import '../exempla/transactio.dart';
 import 'package:collection/collection.dart';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> submittereTransactioFixum(Request req) async {
   SubmittereTransaction st =
-      SubmittereTransaction.fromJson(json.decode(await req.readAsString()));
+      SubmittereTransaction.fromJson(Encoder.decodeJson(await req.readAsString()));
   Directory directorium =
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   try {
@@ -25,7 +26,7 @@ Future<Response> submittereTransactioFixum(Request req) async {
     String publica = pk.publicKey.toHex();
     if (publica == st.to) {
       return Response.badRequest(
-          body: json.encode(BadRequest(
+          body: Encoder.encodeJson(BadRequest(
                   code: 0,
                   message: "potest mittere pecuniam publicam clavem",
                   nuntius: "can not send money to the same public key")
@@ -33,7 +34,7 @@ Future<Response> submittereTransactioFixum(Request req) async {
     }
     if (st.pod == BigInt.zero) {
       return Response.badRequest(
-          body: json.encode(BadRequest(
+          body: Encoder.encodeJson(BadRequest(
                   code: 1,
                   nuntius: "non potest mittere 0",
                   message: "can not send 0")
@@ -46,12 +47,12 @@ Future<Response> submittereTransactioFixum(Request req) async {
     bool isProbationum = await Pera.isProbationum(st.to, lo);
     BigInt limit = Pera.habetBid(false, publica, lo);
     if (st.pod > limit && !isProbationum) {
-      return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
+      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD').toJson()));
     }
     // if (!await Pera.isPublicaClavisDefended(st.to, lo) &&
     //     !isProbationum) {
     //   return Response.badRequest(
-    //       body: json.encode(BadRequest(
+    //       body: Encoder.encodeJson(BadRequest(
     //               code: 3,
     //               nuntius: 'accipientis non defenditur',
     //               message: 'public key is not defended')
@@ -60,7 +61,7 @@ Future<Response> submittereTransactioFixum(Request req) async {
     final bool isp = await Pera.isProbationum(st.to, lo);
     if (SiRemotionem.habetProfundum(false, pk.publicKey.toHex(), lo) && !isp) {
       return Response.badRequest(
-        body: json.encode(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth').toJson())
+        body: Encoder.encodeJson(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth').toJson())
       );
     }
     List<Transactio> stagnum = par!.fixumTransactions;
@@ -84,7 +85,7 @@ Future<Response> submittereTransactioFixum(Request req) async {
         print('abouttosyncfixum');
         par!.syncFixumTransaction(transactio as Transactio);
       });     
-      return Response.ok(json.encode(TransactioSubmittereResponsionis(
+      return Response.ok(Encoder.encodeJson(TransactioSubmittereResponsionis(
               true, fixum.interiore.identitatis)
           .toJson()));
     } else {
@@ -109,16 +110,16 @@ Future<Response> submittereTransactioFixum(Request req) async {
           par!.syncFixumTransaction(transactio as Transactio);
         });
         // await par!.syncFixumTransaction(liber);
-        return Response.ok(json.encode(TransactioSubmittereResponsionis(false, liber.interiore.identitatis).toJson()));
+        return Response.ok(Encoder.encodeJson(TransactioSubmittereResponsionis(false, liber.interiore.identitatis).toJson()));
     }
   } on BadRequest catch (e) {
-    return Response.badRequest(body: json.encode(e.toJson()));
+    return Response.badRequest(body: Encoder.encodeJson(e.toJson()));
   }
 }
 // Future<Response> submittereTransactioFixum(Request req) async {
 //   Directory directorium = Directory(
 //       '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
-//   SubmittereTransaction st = SubmittereTransaction.fromJson(json.decode(await req.readAsString()));
+//   SubmittereTransaction st = SubmittereTransaction.fromJson(Encoder.decodeJson(await req.readAsString()));
 //   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
 //   if (st.pod == BigInt.zero) {
 //     return Response.badRequest(body: {
@@ -137,7 +138,7 @@ Future<Response> submittereTransactioFixum(Request req) async {
 //   bool isProbationum = await Pera.isProbationum(st.to, lo);
 //   BigInt limit = Pera.habetBid(true, pk.publicKey.toHex(), lo);
 //   if (st.pod > limit && !isProbationum) {
-//     return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
+//     return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
 //   }
 //   final Transactio transactio = Transactio.nullam(await Pera.novamRem(
 //       necessitudo: true,
@@ -158,13 +159,13 @@ Future<Response> submittereTransactioFixum(Request req) async {
 //   acciperePortus.listen((transactio) {
 //     par!.syncFixumTransaction(transactio as Transactio);
 //   });
-//   return Response.ok(json.encode(TransactioSubmittereResponsionis(
+//   return Response.ok(Encoder.encodeJson(TransactioSubmittereResponsionis(
 //               false, transactio.interiore.identitatis)
 //           .toJson()));
-//   // return Response.ok(json.encode(
+//   // return Response.ok(Encoder.encodeJson(
 //   //     {"transactionIdentitatis": transactio.interiore.identitatis}));
 // }
 
 Future<Response> fixumTransactionStagnum(Request req) async {
-  return Response.ok(json.encode(par!.fixumTransactions.map((e) => e.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "notfixum": par!.fixumTransactions.map((e) => e.toJson()).toList() }));
 }

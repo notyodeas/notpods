@@ -18,6 +18,7 @@ import '../exempla/responsio/summa_bid_arma.dart';
 import '../exempla/telum.dart';
 import '../server.dart';
 import 'package:collection/collection.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> gladiatorInvictos(Request req) async {
   Directory directory =
@@ -29,7 +30,7 @@ Future<Response> gladiatorInvictos(Request req) async {
     invictos.add(
         InvictosGladiator(gladiator.item1, gladiator.item2, gladiator.item3));
   }
-  return Response.ok(json.encode(invictos.map((e) => e.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "nivictos": invictos.map((e) => e.toJson()).toList() }));
 }
 
 Future<Response> gladiatorDefenditur(Request req) async {
@@ -38,13 +39,13 @@ Future<Response> gladiatorDefenditur(Request req) async {
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directory);
   if (await Pera.isPublicaClavisDefended(publica, lo)) {
-    return Response.ok(json.encode({
+    return Response.ok(Encoder.encodeJson({
       "defenditur": true,
       "nuntius": "publica clavis defenditur",
       "message": "the public key is protected"
     }));
   } else {
-    return Response.ok(json.encode({
+    return Response.ok(Encoder.encodeJson({
       "defenditur": false,
       "nuntius": "publica clavis non defenditur",
       "message": "the public key is not protected"
@@ -80,9 +81,9 @@ Future<Response> gladiatorArma(Request req) async {
         defensionesFixum: fixumDefensiones,
         impetusLiber: liberImpetus,
         impetusFixum: fixumImpetus);
-    return Response.ok(json.encode(ga.toJson()));
+    return Response.ok(Encoder.encodeJson(ga.toJson()));
   } on BadRequest catch (e) {
-    return Response.badRequest(body: json.encode(e.toJson()));
+    return Response.badRequest(body: Encoder.encodeJson(e.toJson()));
   }
 }
 
@@ -95,9 +96,9 @@ Future<Response> gladiatorSummaBidArma(Request req) async {
     BigInt summaBid = await Pera.summaBid(probationem, lo);
     ObstructionumArma oa = await Pera.obstructionumArma(probationem, lo);
     return Response.ok(
-        json.encode(SummaBidArma(probationem, summaBid, oa).toJson()));
+        Encoder.encodeJson(SummaBidArma(probationem, summaBid, oa).toJson()));
   } on BadRequest catch (err) {
-    return Response.badRequest(body: json.encode(err.toJson()));
+    return Response.badRequest(body: Encoder.encodeJson(err.toJson()));
   }
 }
 Future<Response> algiatornotbidantibationem(Request req) async {
@@ -129,6 +130,6 @@ Future<Response> algiatornotbidantibationem(Request req) async {
         impetusLiber: liberImpetus.where((element) => element.probationem == antibationems).toList(),
         impetusFixum: fixumImpetus.where((element) => element.probationem == antibationems).toList()
     );
-    return Response.ok(json.encode(ga.toJson()));
+    return Response.ok(Encoder.encodeJson(ga.toJson()));
   
 }

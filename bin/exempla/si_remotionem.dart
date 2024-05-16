@@ -14,6 +14,7 @@ import 'obstructionum.dart';
 import 'pera.dart';
 import 'transactio.dart';
 import 'utils.dart';
+import 'package:encoder/encoder.dart';
 
 class SiRemotionemInput {
   String signatureInput;
@@ -208,7 +209,7 @@ class SiRemotionem {
   SiRemotionem(this.probationem, this.interiore);
   SiRemotionem.summitto(this.interiore)
       : probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes);
 
   SiRemotionem.fromJson(Map<String, dynamic> map)
@@ -223,7 +224,7 @@ class SiRemotionem {
   bool validateProbationem() {
     if (probationem !=
         HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes)) {
               print('siremotionemcheckwasprobationem');
       return false;
@@ -324,7 +325,7 @@ class SiRemotionem {
       do {
         interiore.mine();
         probationem = HEX.encode(
-            sha512.convert(utf8.encode(json.encode(interiore.toJson()))).bytes);
+            sha512.convert(utf8.encode(Encoder.encodeJson(interiore.toJson()))).bytes);
       } while (!probationem.startsWith('0' * zeros));
       for (int i = zeros + 1; i < probationem.length; i++) {
         if (probationem.substring(0, i) == ('0' * i)) {

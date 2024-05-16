@@ -9,6 +9,7 @@ import '../exempla/transactio.dart';
 import '../exempla/utils.dart';
 import 'dart:convert';
 import '../server.dart';
+import 'package:encoder/encoder.dart';
 
 Future<Response> transactioIdentitatis(Request req) async {
   String identitatis = req.params['identitatis']!;
@@ -19,7 +20,7 @@ Future<Response> transactioIdentitatis(Request req) async {
     await for (String obstructionum in Utils.fileAmnis(
         File('${directory.path}${Constantes.caudices}$i.txt'))) {
       obs.add(Obstructionum.fromJson(
-          json.decode(obstructionum) as Map<String, dynamic>));
+          Encoder.decodeJson(obstructionum) as Map<String, dynamic>));
     }
   }
   Obstructionum prior = await Obstructionum.acciperePrior(directory);
@@ -37,7 +38,7 @@ Future<Response> transactioIdentitatis(Request req) async {
             Obstructionum.confirmationes(interiore.obstructionumNumerus,
                 prior.interiore.obstructionumNumerus));
         return Response.ok(
-            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+            Encoder.encodeJson({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
       }
     }
     for (Transactio tx in interiore.fixumTransactions) {
@@ -52,7 +53,7 @@ Future<Response> transactioIdentitatis(Request req) async {
             Obstructionum.confirmationes(interiore.obstructionumNumerus,
                 prior.interiore.obstructionumNumerus));
         return Response.ok(
-            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+            Encoder.encodeJson({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
       }
     }
   }
@@ -66,7 +67,7 @@ Future<Response> transactioIdentitatis(Request req) async {
           null,
           null,
           null);
-      return Response.ok(json.encode({ "data": txInfo.toJson(), "scriptum": tx.toJson()}));
+      return Response.ok(Encoder.encodeJson({ "data": txInfo.toJson(), "scriptum": tx.toJson()}));
     }
   }
   for (Transactio tx in par!.fixumTransactions) {
@@ -79,11 +80,11 @@ Future<Response> transactioIdentitatis(Request req) async {
           null,
           null,
           null);
-      return Response.ok(json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+      return Response.ok(Encoder.encodeJson({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
     }
   }
   return Response.badRequest(
-      body: json.encode({
+      body: Encoder.encodeJson({
     "code": 0,
     "nuntius": "Re non inveni",
     "message": "Transaction not found"
@@ -94,23 +95,24 @@ Response transactioConnexaLiberExpressi(Request req) {
   String liberIdentitatis = req.params['liber-identitatis']!;
   ConnexaLiberExpressi cle = par!.connexiaLiberExpressis.singleWhere((cle) =>
       cle.interioreConnexaLiberExpressi.identitatis == liberIdentitatis);
-  return Response.ok(json.encode(cle.toJson()));
+  return Response.ok(Encoder.encodeJson(cle.toJson()));
 }
+
 
 Response transactioStagnumLiber(Request req) {
   return Response.ok(
-      json.encode(par!.liberTransactions.map((lt) => lt.toJson()).toList()));
+      Encoder.encodeJson({ "notliberartnsaction": par!.liberTransactions.map((lt) => lt.toJson()).toList()}));
 }
 
 Response transactioStagnumFixum(Request req) {
   return Response.ok(
-      json.encode(par!.fixumTransactions.map((ft) => ft.toJson()).toList()));
+      Encoder.encodeJson({ "notfixumartnsaction": par!.fixumTransactions.map((ft) => ft.toJson()).toList() }));
 }
 
 Response transactioStagnumExpressi(Request req) {
   return Response.ok(
-      json.encode(par!.expressiTransactions.map((et) => et.toJson()).toList()));
+      Encoder.encodeJson({ "notexpressiartnsaction": par!.expressiTransactions.map((et) => et.toJson()).toList() }));
 }
 Response transactioStagnumConnexaLiberExpressi(Request req) {
-  return Response.ok(json.encode(par!.connexiaLiberExpressis.map((mcle) => mcle.toJson()).toList()));
+  return Response.ok(Encoder.encodeJson({ "notconnexanotlibernotexpressi": par!.connexiaLiberExpressis.map((mcle) => mcle.toJson()).toList() }));
 }

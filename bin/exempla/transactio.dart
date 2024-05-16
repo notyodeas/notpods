@@ -13,7 +13,7 @@ import 'package:ecdsa/ecdsa.dart';
 import './pera.dart';
 import './constantes.dart';
 import 'package:collection/collection.dart';
-
+import 'package:encoder/encoder.dart';
 import 'si_remotionem.dart';
 import 'solucionis_propter.dart';
 
@@ -199,12 +199,12 @@ class Transactio {
             jsoschon[JSON.interiore] as Map<String, dynamic>);
   Transactio.nullam(this.interiore)
       : probationem = HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes);
   Transactio.praemium(String producentis, BigInt praemium)
       : interiore = InterioreTransactio.praemium(producentis, praemium) {
     probationem = HEX.encode(sha512
-        .convert(utf8.encode(json.encode(interiore.toJson())))
+        .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
         .bytes);
   }
   static void quaestum(List<dynamic> argumentis) {
@@ -216,7 +216,7 @@ class Transactio {
       do {
         interiore.mine();
         probationem = HEX.encode(
-            sha512.convert(utf8.encode(json.encode(interiore.toJson()))).bytes);
+            sha512.convert(utf8.encode(Encoder.encodeJson(interiore.toJson()))).bytes);
       } while (!probationem.startsWith('0' * zeros));
       for (int i = zeros + 1; i < probationem.length; i++) {
         if (probationem.substring(0, i) == ('0' * i)) {
@@ -429,7 +429,7 @@ class Transactio {
   bool validateProbationem() {
     if (probationem !=
         HEX.encode(sha512
-            .convert(utf8.encode(json.encode(interiore.toJson())))
+            .convert(utf8.encode(Encoder.encodeJson(interiore.toJson())))
             .bytes)) {
       return false;
     }
@@ -553,7 +553,7 @@ class InritaTransactio {
       do {
         interiore.mine();
         probationem = HEX.encode(
-            sha512.convert(utf8.encode(json.encode(interiore.toJson()))).bytes);
+            sha512.convert(utf8.encode(Encoder.encodeJson(interiore.toJson()))).bytes);
       } while (!probationem.startsWith('0' * zeros));
       for (int i = zeros + 1; i < probationem.length; i++) {
         if (probationem.substring(0, i) == ('0' * i)) {
