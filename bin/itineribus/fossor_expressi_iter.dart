@@ -15,20 +15,19 @@ import '../exempla/si_remotionem.dart';
 import '../exempla/transactio.dart';
 import '../exempla/constantes.dart';
 import '../server.dart';
-import 'package:encoder/encoder.dart';
 
 Future<Response> fossorExpressi(Request req) async {
   bool estFurca = bool.parse(req.params['furca']!);
   try {
     IncipitPugna ip =
-      IncipitPugna.fromJson(Encoder.decodeJson(await req.readAsString()));
+      IncipitPugna.fromJson(json.decode(await req.readAsString()));
     Directory directorium =
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
     Obstructionum prior = await Obstructionum.acciperePrior(directorium);
     List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
     if (!File('${directorium.path}/${Constantes.caudices}0.txt').existsSync()) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 0,
         "nuntius": "adhuc expectans incipio obstructionum",
         "message": "Still waiting on incipio block"
@@ -38,7 +37,7 @@ Future<Response> fossorExpressi(Request req) async {
     await Obstructionum.grabGladiator(ip.victima.identitatis, lo);
     if (gladiatorVictima == null) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 1,
         "nuntius": "Gladiator non inveni",
         "message": "Gladiator not found"
@@ -48,7 +47,7 @@ Future<Response> fossorExpressi(Request req) async {
     if (await Obstructionum.gladiatorConfodiantur(
       ip.victima.primis, ip.victima.identitatis, pk.publicKey.toHex(), lo)) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 2,
         "message": "Non te oppugnare",
         "english": "Can not attack yourself"
@@ -56,14 +55,14 @@ Future<Response> fossorExpressi(Request req) async {
     }
     String publica = pk.publicKey.toHex();
     if (publica != argumentis!.publicaClavis) {
-      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 3, nuntius: 'doleo te solum posse meum confussum vel expressi cum clavis privatis quae ad argumentum producentis in nodi launch datam pertinet', message: 'sorry you can only mine a confussus or expressi with the private key that belongs to the argument of producentis given on node launch').toJson()));
+      return Response.badRequest(body: json.encode(BadRequest(code: 3, nuntius: 'doleo te solum posse meum confussum vel expressi cum clavis privatis quae ad argumentum producentis in nodi launch datam pertinet', message: 'sorry you can only mine a confussus or expressi with the private key that belongs to the argument of producentis given on node launch')));
     }
     bool inimicusPrimis = await Pera.isPrimis(publica, directorium);
     String gladiatorInimicusIdentitatis = await Pera.accipereGladiatorIdentitatis(publica, directorium);
     Gladiator? gladiatorInimicus = await Obstructionum.grabGladiator(gladiatorInimicusIdentitatis, lo);
     if (gladiatorInimicus == null) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 1,
         "nuntius": "Gladiator iam victus aut non inveni",
         "message": "Gladiator already defeaten or not found with your private key"
@@ -136,13 +135,13 @@ Future<Response> fossorExpressi(Request req) async {
       stamina.expressiThreads.forEach((et) => et.kill(priority: Isolate.immediate));
       await par!.syncBlock(obstructionum);
     });
-    return Response.ok(Encoder.encodeJson({
+    return Response.ok(json.encode({
       "nuntius": "coepi expressi miner",
       "message": "started expressi miner",
       "threads": stamina.expressiThreads.length 
     }));    
   } on BadRequest catch (e) {
-     return Response.badRequest(body: Encoder.encodeJson(e.toJson()));
+     return Response.badRequest(body: json.encode(e.toJson()));
   } 
 }
 

@@ -9,7 +9,6 @@ import '../exempla/obstructionum_arma.dart';
 import '../exempla/pera.dart';
 import '../exempla/errors.dart';
 import '../server.dart';
-import 'package:encoder/encoder.dart';
 
 // @Operation.get('liber', 'index', 'probationem', 'gladiatorId')
 // Future<Response> tuusIubeoTelum(Request req) async {
@@ -38,12 +37,12 @@ Future<Response> summaIubeoTelum(Request req) async {
   try {
     final BigInt summaBid = await Pera.summaBid(probationem, lo);
     final ObstructionumArma oa = await Pera.obstructionumArma(probationem, lo);
-    return Response.ok(Encoder.encodeJson({
+    return Response.ok(json.encode({
       "arma": oa.toJson(),
       "summaBid": summaBid.toString(),
       "probationem": probationem,
     }));
   } on BadRequest catch (err) {
-    return Response.badRequest(body: Encoder.encodeJson(err.toJson()));
+    return Response.badRequest(body: json.encode(err.toJson()));
   }
 }

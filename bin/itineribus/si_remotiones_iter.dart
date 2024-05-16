@@ -17,7 +17,6 @@ import '../exempla/utils.dart';
 import '../server.dart';
 import 'package:collection/collection.dart';
 import 'package:elliptic/elliptic.dart';
-import 'package:encoder/encoder.dart';
 
 class Dominium {
   String publicaClavis;
@@ -27,7 +26,7 @@ class Dominium {
 
 Future<Response> siRemotionessubmittereProof(Request req) async {
   SubmittereSiRemotionem ssr =
-      SubmittereSiRemotionem.fromJson(Encoder.decodeJson(await req.readAsString()));
+      SubmittereSiRemotionem.fromJson(json.decode(await req.readAsString()));
       //its not only setting this to null i mean or null its also about checking if the identitatis is illegal or should that only be on obstructionum sync
       // no for here just null is fine but for the propendam when you would use the siremotionem to be an output of si remotionem we should first check if the id is not forbidden
   Transactio? lt = ssr.interiore.liber
@@ -36,18 +35,18 @@ Future<Response> siRemotionessubmittereProof(Request req) async {
       : par!.fixumTransactions.singleWhereOrNull(
           (swft) => swft.interiore.identitatis == ssr.interiore.identitatis);
   if (lt == null) {
-    return Response.badRequest(body: Encoder.encodeJson(
-      BadRequest(code: 0, nuntius: 'transaction invenire potuerunt subscribere', message: 'could not find transaction to sign').toJson()
+    return Response.badRequest(body: json.encode(
+      BadRequest(code: 0, nuntius: 'transaction invenire potuerunt subscribere', message: 'could not find transaction to sign')
     ));
   }
   if (PrivateKey.fromHex(Pera.curve(), ssr.ex).publicKey.toHex() != lt.interiore.recipiens) {
-    return Response.badRequest(body: Encoder.encodeJson(
+    return Response.badRequest(body: json.encode(
       BadRequest(code: 1, 
       nuntius: 'Non es receptator negotii, scribe identitatem rerum cum accipientibus clavis privatis', 
       message: 'you are not the receiver of the transaction, please sign the transactions identity with the receivers private key').toJson()));
   }
   if (lt.interiore.certitudo != null) {
-    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 2, nuntius: 'transaction iam signatum per eum qui accipit', message: 'transaction is already signed by the receiver').toJson()));
+    return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'transaction iam signatum per eum qui accipit', message: 'transaction is already signed by the receiver')));
   }
   List<Transactio> lte = [];
   lt.interiore.certitudo = Utils.signumIdentitatis(PrivateKey.fromHex(Pera.curve(), ssr.ex), lt.interiore.identitatis);
@@ -75,7 +74,7 @@ Future<Response> siRemotionessubmittereProof(Request req) async {
       par!.syncExpressiTransaction(te);
     }
   });
-  return Response.ok(Encoder.encodeJson(reschet.interiore.toJson()));
+  return Response.ok(json.encode(reschet.interiore.toJson()));
 }
 
 Future<Response> siRemotionesreprehendoSiExistat(Request req) async {
@@ -107,15 +106,15 @@ Future<Response> siRemotionesreprehendoSiExistat(Request req) async {
 
 Future<Response> siRemotionesdenuoProponendam(Request req) async {
   InterioreSiRemotionem sr =
-      InterioreSiRemotionem.fromJson(Encoder.decodeJson(await req.readAsString()));
+      InterioreSiRemotionem.fromJson(json.decode(await req.readAsString()));
   Directory directorium = Directory(
       '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   if (!sr.siRemotionemOutput!.estTransactionIdentitatisAdhucPraesto(lo, null) || par!.inritaTransactions.any((ait) => ait.interiore.identitatis == sr.siRemotionemOutput!.transactioIdentitatis)) {
-    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'rem tollitur rei ante susceptor signati dominus rei', message: 'transaction is removed by the owner of the transaction before the receiver signed it').toJson()));
+    return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'rem tollitur rei ante susceptor signati dominus rei', message: 'transaction is removed by the owner of the transaction before the receiver signed it')));
   }
   if (par!.liberTransactions.any((alt) => alt.interiore.identitatis == sr.siRemotionemOutput!.transactioIdentitatis || par!.fixumTransactions.any((aft) => aft.interiore.identitatis == sr.siRemotionemOutput!.transactioIdentitatis))) {
-    return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 0, nuntius: 'transactionem si remotionem refers to numquam got inclusa in trunco vel adhuc exspectans includi', message: 'the transaction the si remotionem refers to never got included in a block or is still waiting to be included').toJson()));
+    return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'transactionem si remotionem refers to numquam got inclusa in trunco vel adhuc exspectans includi', message: 'the transaction the si remotionem refers to never got included in a block or is still waiting to be included')));
   }
   List<Transactio> lt = [];
   lo
@@ -127,7 +126,7 @@ Future<Response> siRemotionesdenuoProponendam(Request req) async {
       alt.interiore.identitatis ==
       sr.siRemotionemOutput!.transactioIdentitatis)) {
     return Response.badRequest(
-        body: Encoder.encodeJson(BadRequest(
+        body: json.encode(BadRequest(
                 code: 0,
                 nuntius: 'transactio quae numquam remotus est',
                 message: 'transaction has never been removed')
@@ -140,7 +139,7 @@ Future<Response> siRemotionesdenuoProponendam(Request req) async {
   rp.listen((dp) {
     par!.syncSiRemotiones(dp as SiRemotionem);
   });
-  return Response.ok(Encoder.encodeJson({
+  return Response.ok(json.encode({
     "nuntius": "tuum remotum res exspectat prioritas piscinae",
     "message": "your removed transaction is waiting in the priority pool"
   }));
@@ -148,11 +147,11 @@ Future<Response> siRemotionesdenuoProponendam(Request req) async {
 
 Future<Response> siRemotionesStagnum(Request req) async {
   return Response.ok(
-      Encoder.encodeJson({ "not-si-remotionem": par!.siRemotiones.map((e) => e.toJson()).toList() }));
+      json.encode(par!.siRemotiones.map((e) => e.toJson()).toList()));
 }
 
 Future<Response> siRemotionemsRemove(Request req) async {
-  SiRemotionemRemove srr = SiRemotionemRemove.fromJson(Encoder.decodeJson(await req.readAsString()));
+  SiRemotionemRemove srr = SiRemotionemRemove.fromJson(json.decode(await req.readAsString()));
   SiRemotionem sr = par!.siRemotiones.singleWhere((swlsr) => swlsr.interiore.signatureInterioreSiRemotionem == srr.signature);
   SiRemotionemRemoveNuntius srrn = SiRemotionemRemoveNuntius(ex: srr.ex, transactioIdentitatis: sr.interiore.siRemotionemOutput!.transactioIdentitatis, signatureIdentitatis: srr.signature);
   PrivateKey pk = PrivateKey.fromHex(Pera.curve(), srr.ex);
@@ -160,7 +159,7 @@ Future<Response> siRemotionemsRemove(Request req) async {
     return Response.badRequest(body: json..encode(BadRequest(code: 0, nuntius: 'hoc removendi ius non habes', message: 'you dont have the right to remove this si remotionem')));
   }
   par!.removeSiRemotionem(srrn);
-  return Response.ok(Encoder.encodeJson({
+  return Response.ok(json.encode({
     "nuntius": "remota si remotionem a piscinam",
     "message": "removed si remotionem from the pool"
   }));

@@ -15,13 +15,12 @@ import '../exempla/transactio.dart';
 import 'package:shelf/shelf.dart';
 import '../exempla/constantes.dart';
 import '../server.dart';
-import 'package:encoder/encoder.dart';
 
 Future<Response> fossorConfussus(Request req) async {
   bool estFurca = bool.parse(req.params['furca']!);
   try {
     IncipitPugna ip =
-    IncipitPugna.fromJson(Encoder.decodeJson(await req.readAsString()));
+    IncipitPugna.fromJson(json.decode(await req.readAsString()));
     Directory directorium =
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
 
@@ -29,7 +28,7 @@ Future<Response> fossorConfussus(Request req) async {
     List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
     if (!File('${directorium.path}/${Constantes.caudices}0.txt').existsSync()) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 0,
         "nuntius": "adhuc expectans incipio obstructionum",
         "message": "Still waiting on incipio block"
@@ -42,7 +41,7 @@ Future<Response> fossorConfussus(Request req) async {
         ip.victima.identitatis, lo);
     if (gladiatorVictima == null) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 1,
         "nuntius": "Gladiator iam victus aut non inveni",
         "message": "Gladiator already defeaten or not found"
@@ -52,7 +51,7 @@ Future<Response> fossorConfussus(Request req) async {
     if (await Obstructionum.gladiatorConfodiantur(
       ip.victima.primis, ip.victima.identitatis, pk.publicKey.toHex(), lo)) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 2,
         "message": "Non te oppugnare",
         "english": "Can not attack yourself"
@@ -60,7 +59,7 @@ Future<Response> fossorConfussus(Request req) async {
     }
     String publica = pk.publicKey.toHex();
     if (publica != argumentis!.publicaClavis) {
-      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 3, nuntius: 'doleo te solum posse meum confussum vel expressi cum clavis privatis quae ad argumentum producentis in nodi launch datam pertinet', message: 'sorry you can only mine a confussus or expressi with the private key that belongs to the argument of producentis given on node launch').toJson()));
+      return Response.badRequest(body: json.encode(BadRequest(code: 3, nuntius: 'doleo te solum posse meum confussum vel expressi cum clavis privatis quae ad argumentum producentis in nodi launch datam pertinet', message: 'sorry you can only mine a confussus or expressi with the private key that belongs to the argument of producentis given on node launch')));
     }
     List<Transactio> ltsr = [];
     ltsr.addAll(par!.liberTransactions);
@@ -72,7 +71,7 @@ Future<Response> fossorConfussus(Request req) async {
     print('ffound ${gladiatorInimicus == null}');
     if (gladiatorInimicus == null) {
       return Response.badRequest(
-          body: Encoder.encodeJson({
+          body: json.encode({
         "code": 1,
         "nuntius": "Gladiator iam victus aut non inveni",
         "message": "Gladiator already defeaten or not found with your private key"
@@ -142,18 +141,18 @@ Future<Response> fossorConfussus(Request req) async {
       stamina.confussusThreads.forEach((ct) => ct.kill());
       await par!.syncBlock(obstructionum);
     });
-    return Response.ok(Encoder.encodeJson({
+    return Response.ok(json.encode({
       "nuntius": "coepi confussus miner",
       "message": "started confussus miner",
       "threads": stamina.confussusThreads.length
     })); 
   } on BadRequest catch (e) {
-     return Response.badRequest(body: Encoder.encodeJson(e.toJson()));
+     return Response.badRequest(body: json.encode(e.toJson()));
   }
 }
 
 Future<Response> confussusThreads(Request req) async {
-  return Response.ok(Encoder.encodeJson({
+  return Response.ok(json.encode({
     "relatorum": stamina.confussusThreads.length,
     "threads": stamina.confussusThreads.length
   }));
@@ -163,7 +162,7 @@ Future<Response> prohibereConfussus(Request req) async {
   for (int i = 0; i < stamina.efectusThreads.length; i++) {
     stamina.confussusThreads[i].kill(priority: Isolate.immediate);
   }
-  return Response.ok(Encoder.encodeJson({
+  return Response.ok(json.encode({
     "nuntius": "bene substitit confussus miner",
     "message": "succesfully stopped confussus miner",
   }));

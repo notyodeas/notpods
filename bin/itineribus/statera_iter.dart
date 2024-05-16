@@ -9,7 +9,6 @@ import '../exempla/obstructionum.dart';
 import '../exempla/pera.dart';
 import '../exempla/responsio/statera.dart';
 import '../server.dart';
-import 'package:encoder/encoder.dart';
 
 Future<Response> statera(Request req) async {
   Directory directory = Directory(
@@ -19,5 +18,5 @@ Future<Response> statera(Request req) async {
   BigInt stateraLiber = await Pera.statera(true, publicaClavis, lo);
   BigInt stateraFixum = await Pera.statera(false, publicaClavis, lo);
   return Response.ok(
-      Encoder.encodeJson(Statera(liber: stateraLiber, fixum: stateraFixum).toJson()));
+      json.encode(Statera(liber: stateraLiber, fixum: stateraFixum)));
 }

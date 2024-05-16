@@ -16,10 +16,10 @@ import '../exempla/errors.dart';
 import '../exempla/utils.dart';
 import '../server.dart';
 import 'package:collection/collection.dart';
-import 'package:encoder/encoder.dart';
+
 Future<Response> submittereTransactioLiber(Request req) async {
   SubmittereTransaction st =
-      SubmittereTransaction.fromJson(Encoder.decodeJson(await req.readAsString()));
+      SubmittereTransaction.fromJson(json.decode(await req.readAsString()));
   Directory directorium =
       Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   try {
@@ -27,7 +27,7 @@ Future<Response> submittereTransactioLiber(Request req) async {
     String publica = pk.publicKey.toHex();
     if (publica == st.to) {
       return Response.badRequest(
-          body: Encoder.encodeJson(BadRequest(
+          body: json.encode(BadRequest(
                   code: 0,
                   message: "potest mittere pecuniam publicam clavem",
                   nuntius: "can not send money to the same public key")
@@ -35,7 +35,7 @@ Future<Response> submittereTransactioLiber(Request req) async {
     }
     if (st.pod == BigInt.zero) {
       return Response.badRequest(
-          body: Encoder.encodeJson(BadRequest(
+          body: json.encode(BadRequest(
                   code: 1,
                   nuntius: "non potest mittere 0",
                   message: "can not send 0")
@@ -48,12 +48,12 @@ Future<Response> submittereTransactioLiber(Request req) async {
     bool isProbationum = await Pera.isProbationum(st.to, lo);
     BigInt limit = Pera.habetBid(true, publica, lo);
     if (st.pod > limit && !isProbationum) {
-      return Response.badRequest(body: Encoder.encodeJson(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD').toJson()));
+      return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
     }
     if (!await Pera.isPublicaClavisDefended(st.to, lo) &&
         !isProbationum) {
       return Response.badRequest(
-          body: Encoder.encodeJson(BadRequest(
+          body: json.encode(BadRequest(
                   code: 3,
                   nuntius: 'accipientis non defenditur',
                   message: 'public key is not defended')
@@ -62,7 +62,7 @@ Future<Response> submittereTransactioLiber(Request req) async {
     final bool isp = await Pera.isProbationum(st.to, lo);
     if (SiRemotionem.habetProfundum(true, pk.publicKey.toHex(), lo) && !isp) {
       return Response.badRequest(
-        body: Encoder.encodeJson(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth').toJson())
+        body: json.encode(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth').toJson())
       );
     }
     List<Transactio> stagnum = par!.liberTransactions;
@@ -85,7 +85,7 @@ Future<Response> submittereTransactioLiber(Request req) async {
       rp.listen((transactio) async {
         await par!.syncLiberTransaction(transactio as Transactio);
       });     
-      return Response.ok(Encoder.encodeJson(TransactioSubmittereResponsionis(
+      return Response.ok(json.encode(TransactioSubmittereResponsionis(
               true, liber.interiore.identitatis)
           .toJson()));
     } else {
@@ -134,15 +134,15 @@ Future<Response> submittereTransactioLiber(Request req) async {
         for (Transactio t in letti) {
           await par!.syncExpressiTransaction(t);
         }
-        return Response.ok(Encoder.encodeJson(TransactioSubmittereResponsionis(true, liber.interiore.identitatis).toJson()));
+        return Response.ok(json.encode(TransactioSubmittereResponsionis(true, liber.interiore.identitatis).toJson()));
     }
   } on BadRequest catch (e) {
-    return Response.badRequest(body: Encoder.encodeJson(e.toJson()));
+    return Response.badRequest(body: json.encode(e.toJson()));
   }
 }
 
 Future<Response> submittereTransactioLiberRemouens(Request req) async {
-  SubmittereInritaTransactio sit = SubmittereInritaTransactio.fromJson(Encoder.decodeJson(await req.readAsString()));
+  SubmittereInritaTransactio sit = SubmittereInritaTransactio.fromJson(json.decode(await req.readAsString()));
   InterioreInritaTransactio iit = InterioreInritaTransactio(true, sit.identitatis, Utils.signumIdentitatis(PrivateKey.fromHex(Pera.curve(), sit.ex), sit.identitatis));
   par!.inritaTransactio(iit);  
   ReceivePort rp = ReceivePort();
@@ -150,7 +150,7 @@ Future<Response> submittereTransactioLiberRemouens(Request req) async {
   rp.listen((nuntius) {
     par!.syncInritaTransaction(nuntius as InritaTransactio);
   });
-  return Response.ok(Encoder.encodeJson({
+  return Response.ok(json.encode({
     "nuntius": "remoto liber transactionem a piscinam cum id ${sit.identitatis}",
     "message": "removed liber transaction from pool with id ${sit.identitatis}"
   }));
