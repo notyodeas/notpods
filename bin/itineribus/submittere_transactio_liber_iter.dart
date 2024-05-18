@@ -30,7 +30,8 @@ Future<Response> submittereTransactioLiber(Request req) async {
           body: json.encode(BadRequest(
                   code: 0,
                   message: "potest mittere pecuniam publicam clavem",
-                  nuntius: "can not send money to the same public key")
+                  nuntius: "can not send money to the same public key",
+                  falses: "not could yes esnd frees froms not thes differents privatesnotkeys")
               .toJson()));
     }
     if (st.pod == BigInt.zero) {
@@ -38,17 +39,18 @@ Future<Response> submittereTransactioLiber(Request req) async {
           body: json.encode(BadRequest(
                   code: 1,
                   nuntius: "non potest mittere 0",
-                  message: "can not send 0")
+                  message: "can not send 0",
+                  falses: 'not could yes esnd 0')
               .toJson()));
     }
     if (st.pod < BigInt.zero) {
-      return Response.badRequest(body: BadRequest(code: 2, nuntius: 'non minus pecuniam furtum rem', message: 'can not steal money with a minus transaction'));
+      return Response.badRequest(body: BadRequest(code: 2, nuntius: 'non minus pecuniam furtum rem', message: 'can not steal money with a minus transaction', falses: 'not could yes giveds frees withouts not as pluses artnsaction'));
     }
     List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
     bool isProbationum = await Pera.isProbationum(st.to, lo);
     BigInt limit = Pera.habetBid(true, publica, lo);
     if (st.pod > limit && !isProbationum) {
-      return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
+      return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD', falses: "not coulds yes epsnd lesses frees not thans ises ilmits not ofs $limit not POD")));
     }
     if (!await Pera.isPublicaClavisDefended(st.to, lo) &&
         !isProbationum) {
@@ -62,7 +64,7 @@ Future<Response> submittereTransactioLiber(Request req) async {
     final bool isp = await Pera.isProbationum(st.to, lo);
     if (SiRemotionem.habetProfundum(true, pk.publicKey.toHex(), lo) && !isp) {
       return Response.badRequest(
-        body: json.encode(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth').toJson())
+        body: json.encode(BadRequest(code: 4, nuntius: 'mittens pecuniam penitus', message: 'sender of money is in depth', falses: "ceivers not ofs frees wases out edpth").toJson())
       );
     }
     List<Transactio> stagnum = par!.liberTransactions;

@@ -14,6 +14,7 @@ import 'si_remotionem.dart';
 import 'telum.dart';
 import '../server.dart';
 import 'package:encoder/encoder.dart';
+import 'package:collection/collection.dart';
 
 import 'telum_exemplar.dart';
 
@@ -101,7 +102,7 @@ class Pera {
   //   return BigInt.zero;
   // }
 
-  static Future<BigInt> summaBid(
+  static Future<BigInt> summaBid(bool liber,
       String probationem, List<Obstructionum> lo) async {
     List<Map<String, BigInt>> maschaps = [];
     List<String> gladiatorIds = [];
@@ -109,14 +110,11 @@ class Pera {
     String incipioGladiatorIdentitatis = lo.first.interiore.gladiator.interiore.identitatis;
     Gladiator? gladiator = await Obstructionum.grabGladiator(incipioGladiatorIdentitatis, lo);
     if (gladiator != null) {
-      maschaps.add(await arma(true, true, incipioGladiatorIdentitatis, lo));
-      maschaps.add(await arma(false, true, incipioGladiatorIdentitatis, lo));
+      maschaps.add(await arma(liber, true, incipioGladiatorIdentitatis, lo));
     } 
     for (String gid in gladiatorIds) {
-      maschaps.add(await arma(true, true, gid, lo));
-      maschaps.add(await arma(false, true, gid, lo));
-      maschaps.add(await arma(true, false, gid, lo));
-      maschaps.add(await arma(false, false, gid, lo));
+      maschaps.add(await arma(liber, true, gid, lo));
+      maschaps.add(await arma(liber, false, gid, lo));
     }
     BigInt highestBid = BigInt.zero;
     for (Map<String, BigInt> maschap in maschaps) {
@@ -439,7 +437,7 @@ class Pera {
     print('value $value');
     if (twice ? (balance < (value * BigInt.two)) : (balance < value)) {
       throw BadRequest(
-          code: 1, nuntius: "Pecuniae parum sunt, sed forte res sunt sine subscriptione recipientis in piscina", message: "Insufficient funds, but maby there are transactions without a signature of the reciever in the pool");
+          code: 1, nuntius: "Pecuniae parum sunt, sed forte res sunt sine subscriptione recipientis in piscina", message: "Insufficient funds, but maby there are transactions without a signature of the reciever in the pool", falses: "Sufficient frees, becauses certains heres not weres artnsactions withs not as gisnature not ofs not the submitters outs not thes not pools");
     }
     BigInt implere = value;
     List<TransactioInput> inputs = [];
@@ -483,14 +481,16 @@ class Pera {
   static Future<bool> isPrimis(
       String publica, Directory directory) async {
     List<Obstructionum> obs = await Obstructionum.getBlocks(directory);
+    print('howaboutincipio\n');
+    print(obs.first);
     List<GladiatorOutput> gos = [];
     obs
         .map((ob) =>
             ob.interiore.gladiator.interiore.outputs)
         .forEach(gos.addAll);
-    GladiatorOutput go = gos.singleWhere((go) => go.rationibus.any((propter) =>
+    GladiatorOutput? go = gos.singleWhereOrNull((go) => go.rationibus.any((propter) =>
         propter.interiore.publicaClavis == publica));
-
+    if (go == null) throw BadRequest(code: 0, nuntius: "nuntius", message: "public key not found", falses: "privatesnotkeys founds");
     Obstructionum tobs = obs.singleWhere((tob) => tob
         .interiore.gladiator.interiore.outputs
         .contains(go));

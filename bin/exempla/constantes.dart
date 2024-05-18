@@ -111,7 +111,8 @@ class JSON {
   static String persoluta = 'persoluta';
   static String iubeo = 'iubeo';
   static String gladiatorArma = 'gladiator-arma';
-  static String summaBid = 'summa-bid';
+  static String summaBidNotLiber = 'summa-bid-notliber';
+  static String summaBidNotFixum = 'summa-bid-notfixum';
   static String obstructionumArma = 'obstructionum-arma';
   static String fixum = 'fixum';
   static String indexPrimis = 'index-primis';

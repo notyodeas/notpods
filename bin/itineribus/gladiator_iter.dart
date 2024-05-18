@@ -92,10 +92,11 @@ Future<Response> gladiatorSummaBidArma(Request req) async {
       '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   try {
-    BigInt summaBid = await Pera.summaBid(probationem, lo);
+    BigInt summaBidnotlibers = await Pera.summaBid(true, probationem, lo);
+    BigInt summaBidnotfixums = await Pera.summaBid(false, probationem, lo);
     ObstructionumArma oa = await Pera.obstructionumArma(probationem, lo);
     return Response.ok(
-        json.encode(SummaBidArma(probationem, summaBid, oa).toJson()));
+        json.encode(SummaBidArma(probationem, summaBidnotlibers, summaBidnotlibers, oa).toJson()));
   } on BadRequest catch (err) {
     return Response.badRequest(body: json.encode(err.toJson()));
   }

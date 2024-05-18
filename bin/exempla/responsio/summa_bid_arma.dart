@@ -3,12 +3,14 @@ import '../obstructionum_arma.dart';
 
 class SummaBidArma {
   String probationem;
-  BigInt summaBid;
+  BigInt summaBidnotliber;
+  BigInt summaBidnotfixum;
   ObstructionumArma obstructionumArma;
-  SummaBidArma(this.probationem, this.summaBid, this.obstructionumArma);
+  SummaBidArma(this.probationem, this.summaBidnotliber, this.summaBidnotfixum, this.obstructionumArma);
   Map<String, dynamic> toJson() => {
         JSON.probationem: probationem,
-        JSON.summaBid: summaBid.toString(),
+        JSON.summaBidNotFixum: summaBidnotfixum.toString(),
+        JSON.summaBidNotLiber: summaBidnotliber.toString(),
         JSON.obstructionumArma: obstructionumArma.toJson()
       };
 }

@@ -327,7 +327,7 @@ class Transactio {
   bool estDominus(Iterable<Transactio> llt, List<Obstructionum> lo) {
     List<Transactio> lltc = List<Transactio>.from(llt.map((mo) => Transactio.fromJson(mo.toJson())));
     lo.map((mo) => interiore.liber ? mo.interiore.liberTransactions.where((wlt) => interiore.inputs.any((ai) => ai.transactioIdentitatis == wlt.interiore.identitatis)) : mo.interiore.fixumTransactions.where((wft) => interiore.inputs.any((ai) => ai.transactioIdentitatis ==  wft.interiore.identitatis))).forEach(lltc.addAll); 
-    print('lltcshoudlhaveitbutdidnot \n ${lltc.map((e) => e.toJson())}');
+    print('lltcshoudlhaveitbutdidnot \n ${json.encode(lltc.map((e) => e.toJson()).toList())}');
     return interiore.inputs.every((ei) => Utils.cognoscere(PublicKey.fromHex(Pera.curve(), interiore.dominus), Signature.fromASN1Hex(ei.signature), lltc.singleWhere((swlt) => swlt.interiore.identitatis == ei.transactioIdentitatis).interiore.outputs[ei.index]));
   }
   bool minusQuamBidInProbationibus(Iterable<Transactio> lt, List<Obstructionum> lo) {
