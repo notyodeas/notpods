@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:encoder/encoder.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import '../exempla/connexa_liber_expressi.dart';
@@ -19,7 +20,7 @@ Future<Response> transactioIdentitatis(Request req) async {
     await for (String obstructionum in Utils.fileAmnis(
         File('${directory.path}${Constantes.caudices}$i.txt'))) {
       obs.add(Obstructionum.fromJson(
-          json.decode(obstructionum) as Map<String, dynamic>));
+          Encoder.decodeJson(obstructionum) as Map<String, dynamic>));
     }
   }
   Obstructionum prior = await Obstructionum.acciperePrior(directory);
