@@ -1682,6 +1682,42 @@ class ParAdRimor {
           [ip]).indu()));
       nervus.destroy();
   }
+  Future removeLiberTransactions(List<String> identitatum) async {
+    expressiTransactions.removeWhere(
+        (l) => identitatum.any((i) => i == l.interiore.identitatis));
+    await filterOnline();
+    List<String> acceptum = bases.where((wbases) => wbases != ip).toList();
+    if (acceptum.isEmpty) {
+      return;
+    }
+    String nervuss = acceptum[random.nextInt(acceptum.length)];
+    Socket nervus = await Socket.connect(
+        nervuss.split(':')[0], int.parse(nervuss.split(':')[1]));
+    nervus.write(Encoder.encodeJson(RemoveTransactionsPervideasNuntius(
+          TransactioGenus.liber,
+          identitatum,
+          PervideasNuntiusTitulus.removeTransactions,
+          [ip]).indu()));
+      nervus.destroy();
+  }
+  Future removeFixumTransactions(List<String> identitatum) async {
+    expressiTransactions.removeWhere(
+        (l) => identitatum.any((i) => i == l.interiore.identitatis));
+    await filterOnline();
+    List<String> acceptum = bases.where((wbases) => wbases != ip).toList();
+    if (acceptum.isEmpty) {
+      return;
+    }
+    String nervuss = acceptum[random.nextInt(acceptum.length)];
+    Socket nervus = await Socket.connect(
+        nervuss.split(':')[0], int.parse(nervuss.split(':')[1]));
+    nervus.write(Encoder.encodeJson(RemoveTransactionsPervideasNuntius(
+          TransactioGenus.fixum,
+          identitatum,
+          PervideasNuntiusTitulus.removeTransactions,
+          [ip]).indu()));
+      nervus.destroy();
+  }
   // proof you are the owner too
   Future removeConnexaLiberExpressis(List<String> identitatum) async {
     connexiaLiberExpressis.removeWhere((cle) => identitatum.any((identitatis) =>
@@ -1726,6 +1762,13 @@ class ParAdRimor {
           }
     }
   }
+
+  Future ermovesnotlibersartnsaction(List<Transactio> nlnt) async {
+    liberTransactions.removeWhere((nlntee) => nlnt.any((nlntn) => nlntn.interiore.identitatis == nlntee.interiore.identitatis));
+
+  }
+
+
 
   Future inritaTransactio(InterioreInritaTransactio it) async {
     Transactio? t = it.liber ? 

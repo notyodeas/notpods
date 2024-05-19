@@ -262,7 +262,8 @@ void main(List<String> args) async {
   // Configure a pipeline that logs requests.
   final handler = Pipeline().addMiddleware(logRequests()).addMiddleware(corsHeaders(headers: {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "*"
+    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS"
   })).addHandler(_router);
 
   // For running in containers, we respect the PORT environment variable.
