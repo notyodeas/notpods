@@ -133,9 +133,9 @@ Future<Response> fossorExpressi(Request req) async {
     acciperePortus.listen((nuntius) async {
       Obstructionum obstructionum = nuntius as Obstructionum;
       stamina.expressiThreads.forEach((et) => et.kill(priority: Isolate.immediate));
+      await par!.syncBlock(obstructionum);
       await par!.removeLiberTransactions(obstructionum.interiore.liberTransactions.map((e) => e.interiore.identitatis).toList());
       await par!.removeFixumTransactions(obstructionum.interiore.fixumTransactions.map((e) => e.interiore.identitatis).toList());
-      await par!.syncBlock(obstructionum);
     });
     return Response.ok(json.encode({
       "nuntius": "coepi expressi miner",

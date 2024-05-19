@@ -81,9 +81,9 @@ Future<Response> fossorEfectus(Request req) async {
   rp.listen((nuntius) async {
     Obstructionum obstructionum = nuntius as Obstructionum;
     stamina.efectusThreads.forEach((et) => et.kill());
+    await par!.syncBlock(obstructionum);
     await par!.removeLiberTransactions(obstructionum.interiore.liberTransactions.map((e) => e.interiore.identitatis).toList());
     await par!.removeFixumTransactions(obstructionum.interiore.fixumTransactions.map((e) => e.interiore.identitatis).toList());
-    await par!.syncBlock(obstructionum);
     
   });
   return Response.ok(json.encode({

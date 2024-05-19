@@ -139,9 +139,9 @@ Future<Response> fossorConfussus(Request req) async {
     acciperePortus.listen((nuntius) async {
       Obstructionum obstructionum = nuntius as Obstructionum;
       stamina.confussusThreads.forEach((ct) => ct.kill());
+      await par!.syncBlock(obstructionum);
       await par!.removeLiberTransactions(obstructionum.interiore.liberTransactions.map((e) => e.interiore.identitatis).toList());
       await par!.removeFixumTransactions(obstructionum.interiore.fixumTransactions.map((e) => e.interiore.identitatis).toList());
-      await par!.syncBlock(obstructionum);
       
 
     });
