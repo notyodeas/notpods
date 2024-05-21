@@ -153,7 +153,7 @@ class InterioreObstructionum {
         indicatione = DateTime.now().microsecondsSinceEpoch,
         nonce = BigInt.zero,
         defensio = [Utils.randomHex(1)],
-        impetus = [Utils.randomHex(1), Utils.randomHex(1)];
+        impetus = [Utils.randomHex(1), Utils.randomHex(1), Utils.randomHex(1)];
 
   InterioreObstructionum.confussus(
       {required this.estFurca,
@@ -180,7 +180,7 @@ class InterioreObstructionum {
         indicatione = DateTime.now().microsecondsSinceEpoch,
         nonce = BigInt.zero,
         defensio = [Utils.randomHex(1)],
-        impetus = [Utils.randomHex(1), Utils.randomHex(1)];
+        impetus = [Utils.randomHex(1), Utils.randomHex(1), Utils.randomHex(1)];
 
   InterioreObstructionum.expressi(
       {required this.estFurca,
@@ -207,7 +207,7 @@ class InterioreObstructionum {
         indicatione = DateTime.now().microsecondsSinceEpoch,
         nonce = BigInt.zero,
         defensio = [Utils.randomHex(1)],
-        impetus = [Utils.randomHex(1), Utils.randomHex(1)];
+        impetus = [Utils.randomHex(1), Utils.randomHex(1), Utils.randomHex(1)];
 
   mine() {
     indicatione = DateTime.now().microsecondsSinceEpoch;
@@ -1144,7 +1144,11 @@ class Obstructionum {
     }
     return true;
   }
-
+  bool badsewapons() {
+    if (interiore.defensio.length != 1) return true;
+    if (interiore.impetus.length != 3) return true;
+    return false;
+  }
   bool convalidandumExpressiMoles() {
     List<Iterable<Transactio>> lllt = [];
     List<String> lltiti = [];

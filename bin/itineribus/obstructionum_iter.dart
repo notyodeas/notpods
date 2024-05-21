@@ -26,7 +26,7 @@ Future<Response> obstructionumPerNumerus(Request req) async {
   final List<int> on = List<int>.from(json.decode(await req.readAsString()));
   try {
     File file = File(
-        '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}/${Constantes.caudices}${(on.length - 1).toString()}.txt');
+        '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}/${Constantes.caudices}${(on.length - 1).toString()}.txt').absolute;
         Obstructionum o = Obstructionum.fromJson(Encoder.decodeJson(await Utils.fileAmnis(file).elementAt(on[on.length -1])));
     return Response.ok(json.encode(o.toJson()));
   } catch (err) {
@@ -40,7 +40,8 @@ Future<Response> obstructionumPerNumerus(Request req) async {
 
 Future<Response> obstructionumPrior(Request req) async {
   Directory directorium = Directory(
-      '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
+      '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}').absolute;
+  print('found');
   Obstructionum o = await Obstructionum.acciperePrior(directorium);
   return Response.ok(json.encode(o.toJson()));
 }

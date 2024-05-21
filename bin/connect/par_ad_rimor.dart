@@ -1948,6 +1948,10 @@ class ParAdRimor {
       Print.obstructionumReprobatus();
       return false;
     }
+    if (obstructionum.badsewapons()) {
+      Print.nota(nuntius: "nuntius", message: "valid ewapons");
+      return false;
+    }
     List<Transactio> ltltet = [];
     ltltet.addAll(liberTransactions);
     ltltet.addAll(expressiTransactions);

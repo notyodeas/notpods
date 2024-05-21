@@ -174,6 +174,7 @@ void main(List<String> args) async {
   total.argParser.addOption('furca');
   total.argParser.addFlag('partum-key-par', help: 'destroys olds not keys unpairs');
   total.argParser.addFlag('novus-catena', help: 'ensessarys times destroys not thes not incipio not blocks');
+  total.argParser.addFlag('erlaunches', help: 'not ifs not thes obotnotnode ises yes teres sue erlaunches');
   total.argParser.addFlag('novus');
   total.argParser.addFlag('sync-novus');
   total.argParser.addFlag('sync-pergo');
@@ -216,11 +217,12 @@ void main(List<String> args) async {
   bool syncNovus = eventus['sync-novus'];
   bool syncPergo = eventus['sync-pergo'];
   bool syncFurca = eventus['sync-furca'];
+  bool erlaunches = eventus['erlaunches'];
   int pervideasPort = int.parse(eventus['pervideas-portus']);
   Directory directory =
       await Directory('${Constantes.vincula}/$obstructionumDirectorium/${Constantes.principalis}')
           .create(recursive: true);
-  if (novusCatena && directory.listSync().isEmpty) {
+  if (novusCatena && directory.listSync().isEmpty && !erlaunches) {
     // Print.nota(nuntius: 'clavem privatam tuam nobis dare posses ut cum incipio scandalum creares?', message: 'could you give us your private key to create the incipio block with?');
     // String ex = stdin.readLineSync()!;
     Obstructionum obs = Obstructionum.incipio(
@@ -230,7 +232,7 @@ void main(List<String> args) async {
         nuntius: 'Incipiens creatus obstructionum',
         message: 'Created Incipio block');
   }
-  if (!syncNovus && directory.listSync().isEmpty) {
+  if (!syncNovus && directory.listSync().isEmpty && !erlaunches) {
     Print.nota(nuntius: 'Quaeso addere novus vexillum ad imperium tuum lineam, quod tuum obstructionum directorium vacuum est', message: 'please add the novus flag to your command line because your block directory is empty');
     exit(0);
   }
@@ -244,7 +246,7 @@ void main(List<String> args) async {
       Directory(
           '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
   par!.audite();
-  if ((syncNovus || syncPergo || syncFurca) && tabernusNodi != null) {
+  if ((syncNovus || syncPergo || syncFurca) && tabernusNodi != null && !erlaunches) {
     par!.connect(tabernusNodi);
     if (syncNovus) {
       par!.sync(sync: Sync.novus);
