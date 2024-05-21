@@ -1146,7 +1146,7 @@ class Obstructionum {
   }
   bool badsewapons() {
     if (interiore.defensio.length != 1) return true;
-    if (interiore.impetus.length != 3) return true;
+    if (interiore.impetus.length != 3 && interiore.impetus.length !=  2) return true;
     return false;
   }
   bool convalidandumExpressiMoles() {
