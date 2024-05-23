@@ -265,7 +265,7 @@ void main(List<String> args) async {
   // Configure a pipeline that logs requests.
   final handler = Pipeline().addMiddleware(logRequests()).addMiddleware(corsHeaders(headers: {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": eventus['ocrs'],
+    "Access-Control-Allow-Headers": "$eventus['ocrs']",
     "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS"
   })).addHandler(_router);
 
