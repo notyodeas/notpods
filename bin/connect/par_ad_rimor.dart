@@ -1978,6 +1978,11 @@ class ParAdRimor {
         Print.obstructionumReprobatus();
         return false;
       }
+      if (!await sr.remotumEst()) {
+        Print.nota(nuntius: "nuntius", message: "duplicate si remotionem");
+        Print.obstructionumReprobatus();
+        return false;
+      }
       List<Transactio> all = obstructionum.interiore.liberTransactions;
       all.addAll(obstructionum.interiore.fixumTransactions);
       all.addAll(liberTransactions);
