@@ -346,8 +346,7 @@ class Obstructionum {
       probationem = HEX.encode(sha512
           .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
           .bytes);
-          print(probationem);
-          print('\r$probationem');
+          stdout.write('\r $probationem');
     } while (!probationem
         .startsWith('0' * interioreObstructionum.obstructionumDifficultas));
     mitte.send(Obstructionum(interioreObstructionum, probationem));
@@ -365,9 +364,7 @@ class Obstructionum {
         probationem = HEX.encode(sha512
             .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
             .bytes);
-        print(probationem);
-        print('\r$probationem');
-        // print(probationem);
+        stdout.write('\r $probationem');
       } while (!probationem
           .startsWith('0' * interioreObstructionum.obstructionumDifficultas));
       if (!toCrack.every((tc) => probationem.contains(tc))) {
@@ -391,8 +388,7 @@ class Obstructionum {
         probationem = HEX.encode(sha512
             .convert(utf8.encode(Encoder.encodeJson(interioreObstructionum.toJson())))
             .bytes);
-        print(probationem);
-        print('\r$probationem');
+          stdout.write('\r $probationem');
       } while (!probationem.startsWith('0' *
               (interioreObstructionum.obstructionumDifficultas / 2).floor()) ||
           !probationem.endsWith('0' *

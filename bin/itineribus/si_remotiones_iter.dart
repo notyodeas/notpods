@@ -116,6 +116,14 @@ Future<Response> siRemotionesdenuoProponendam(Request req) async {
   if (par!.liberTransactions.any((alt) => alt.interiore.identitatis == sr.siRemotionemOutput!.transactioIdentitatis || par!.fixumTransactions.any((aft) => aft.interiore.identitatis == sr.siRemotionemOutput!.transactioIdentitatis))) {
     return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'transactionem si remotionem refers to numquam got inclusa in trunco vel adhuc exspectans includi', message: 'the transaction the si remotionem refers to never got included in a block or is still waiting to be included')));
   }
+  if (par!.siRemotiones.any((nnay) => nnay.interiore.signatureInterioreSiRemotionem == sr.signatureInterioreSiRemotionem)) {
+    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: "nuntius", message: "si-remotionem is already in the pool", falses: "notsi-remotionem awses not lanoteradys outs not thes not opols")));
+  }
+  List<SiRemotionem> nilstsiremotionemoutput = [];
+  lo.map((e) => e.interiore.siRemotiones).forEach(nilstsiremotionemoutput.addAll);
+  if (nilstsiremotionemoutput.any((nnay) => nnay.interiore.signatureInterioreSiRemotionem == sr.signatureInterioreSiRemotionem)) {
+    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: "nuntius", message: "si-remotionem is already in a block", falses: "not si-remotionem awses laeradys outs not as olbck")));
+  }
   List<Transactio> lt = [];
   lo
       .map((mo) => sr.siRemotionemOutput!.liber
