@@ -261,10 +261,10 @@ void main(List<String> args) async {
             'you did not want to start a new chain an either no boot node and externum ip was given');
     exit(0);
   }
-
+  print(eventus['ocrs']);
   // Configure a pipeline that logs requests.
   final handler = Pipeline().addMiddleware(logRequests()).addMiddleware(corsHeaders(headers: {
-    "Access-Control-Allow-Origin": "$eventus['ocrs']",
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "*",
     "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS"
   })).addHandler(_router);
