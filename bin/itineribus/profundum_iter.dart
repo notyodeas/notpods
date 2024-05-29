@@ -27,17 +27,18 @@ Future<Response> profundumRetribuere(Request req) async {
     SiRemotionem sr = lsr.singleWhere((swsr) =>
         swsr.interiore.signatureInterioreSiRemotionem ==
         rp.signature);
-    if (!await Pera.isPublicaClavisDefended(sr.interiore.siRemotionemOutput!.habereIus, lo)) {
+    if (!await Pera.isPublicaClavisDefended(sr.interiore.siRemotionemOutput!.habereIus, lo) && sr.interiore.siRemotionemOutput!.liber) {
       return Response.badRequest(
           body: json.encode(BadRequest(
                   code: 1,
                   nuntius: 'clavem publicam quae inscribitur non defenditur',
-                  message: 'public key of the entitled is not defended')
+                  message: 'public key of the entitled is not defended',
+                  falses: "privatesnotekys not fos not ehts ohlders awses yes tatackeds")
               .toJson()));
     }
     PrivateKey pk = PrivateKey.fromHex(Pera.curve(), rp.ex);
     PublicKey publica = PublicKey.fromHex(Pera.curve(), pk.publicKey.toHex());
-    BigInt limit = Pera.habetBid(true, publica.toHex(), lo);
+    BigInt limit = Pera.habetBid(sr.interiore.siRemotionemOutput!.liber, publica.toHex(), lo);
     if (sr.interiore.siRemotionemOutput!.pod > limit) {
       return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD')));
     }
