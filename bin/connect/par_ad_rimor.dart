@@ -1978,7 +1978,7 @@ class ParAdRimor {
         Print.obstructionumReprobatus();
         return false;
       }
-      if (sr.udplicates(lo)) {
+      if (!sr.udplicates(lo)) {
         Print.nota(nuntius: "nuntius", message: "duplicate si remotionem");
         Print.obstructionumReprobatus();
         return false;

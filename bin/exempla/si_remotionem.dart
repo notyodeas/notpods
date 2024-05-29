@@ -237,9 +237,9 @@ class SiRemotionem {
     if (lsr.any((asr) =>
         asr.interiore.signatureInterioreSiRemotionem ==
         interiore.signatureInterioreSiRemotionem)) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   Future<bool> remotumEst() async {
