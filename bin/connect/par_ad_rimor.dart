@@ -1683,7 +1683,7 @@ class ParAdRimor {
       nervus.destroy();
   }
   Future removeLiberTransactions(List<String> identitatum) async {
-    expressiTransactions.removeWhere(
+    liberTransactions.removeWhere(
         (l) => identitatum.any((i) => i == l.interiore.identitatis));
     await filterOnline();
     List<String> acceptum = bases.where((wbases) => wbases != ip).toList();
@@ -1701,7 +1701,7 @@ class ParAdRimor {
       nervus.destroy();
   }
   Future removeFixumTransactions(List<String> identitatum) async {
-    expressiTransactions.removeWhere(
+    fixumTransactions.removeWhere(
         (l) => identitatum.any((i) => i == l.interiore.identitatis));
     await filterOnline();
     List<String> acceptum = bases.where((wbases) => wbases != ip).toList();

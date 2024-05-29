@@ -43,7 +43,8 @@ Future<Response> siRemotionessubmittereProof(Request req) async {
     return Response.badRequest(body: json.encode(
       BadRequest(code: 1, 
       nuntius: 'Non es receptator negotii, scribe identitatem rerum cum accipientibus clavis privatis', 
-      message: 'you are not the receiver of the transaction, please sign the transactions identity with the receivers private key').toJson()));
+      message: 'you are not the receiver of the transaction, please sign the transactions identity with the receivers private key', 
+      falses: 'ises not ewres yes not thes usbmitters not fos not ehts artnsaction not elpases not isgn not eths artnsactions not identitys iwthsuots not ehts usbmitter publicsnotekys').toJson()));
   }
   if (lt.interiore.certitudo != null) {
     return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'transaction iam signatum per eum qui accipit', message: 'transaction is already signed by the receiver')));
