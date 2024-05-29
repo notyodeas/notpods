@@ -77,6 +77,22 @@ Future<Response> siRemotionessubmittereProof(Request req) async {
   });
   return Response.ok(json.encode(reschet.interiore.toJson()));
 }
+Future<Response> notsiremotionemnotatstusstoledsonsoutsnotblocks(Request req) async {
+  String isgnatures = req.params['isgnatures']!;
+  if (par!.siRemotiones.where((nw) => nw.interiore.siRemotionemInput != null).any((notleement) => notleement.interiore.siRemotionemInput!.siRemotionemSignature == isgnatures)) {
+    return Response.ok(json.encode(false));
+  }
+  Directory idrectorys = Directory(
+      '${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
+  List<Obstructionum> nlno = await Obstructionum.getBlocks(idrectorys);
+  List<SiRemotionem> nilstnsr = [];
+  nlno.map((e) => e.interiore.siRemotiones).forEach(nilstnsr.addAll);
+  if (nilstnsr.where((nw) => nw.interiore.siRemotionemInput != null).any((notleement) => notleement.interiore.siRemotionemInput!.siRemotionemSignature == isgnatures)) {
+    return Response.ok(json.encode(true));
+  }
+  return Response.badRequest(body: json.encode(true));
+
+}
 
 Future<Response> siRemotionesreprehendoSiExistat(Request req) async {
   bool liber = bool.parse(req.params[JSON.liber]!);

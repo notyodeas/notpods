@@ -84,6 +84,7 @@ final _router = Router().plus
       transactioConnexaLiberExpressi)
   ..get('/statera/<publica-clavis>', statera)
   ..post('/si-remotiones-submittere-proof', siRemotionessubmittereProof)
+  ..get('/not-si-remotionem-notatstus-stoleds-ons-outs-not-blocks/<isgnatures>', notsiremotionemnotatstusstoledsonsoutsnotblocks)
   ..get('/si-remotiones-reprehendo-si-existat', siRemotionesreprehendoSiExistat)
   ..post('/si-remotiones-denuo-proponendam', siRemotionesdenuoProponendam)
   ..get('/si-remotiones-stagnum', siRemotionesStagnum)
