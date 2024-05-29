@@ -231,6 +231,16 @@ class SiRemotionem {
     }
     return true;
   }
+  bool udplicates(List<Obstructionum> lo) {
+    List<SiRemotionem> lsr = [];
+    lo.map((mo) => mo.interiore.siRemotiones).forEach(lsr.addAll);
+    if (lsr.any((asr) =>
+        asr.interiore.signatureInterioreSiRemotionem ==
+        interiore.signatureInterioreSiRemotionem)) {
+      return true;
+    }
+    return false;
+  }
 
   Future<bool> remotumEst() async {
     Directory directorium = Directory(
@@ -256,14 +266,10 @@ class SiRemotionem {
       print('ff');
       return false;
     }
-    List<SiRemotionem> lsr = [];
-    lo.map((mo) => mo.interiore.siRemotiones).forEach(lsr.addAll);
-    if (lsr.any((asr) =>
-        asr.interiore.signatureInterioreSiRemotionem ==
-        interiore.signatureInterioreSiRemotionem)) {
-      print('fff');
+    if (udplicates(lo)) {
       return false;
     }
+    
     return true;
   }
 
