@@ -266,7 +266,7 @@ class SiRemotionem {
       print('ff');
       return false;
     }
-    if (udplicates(lo)) {
+    if (!udplicates(lo)) {
       return false;
     }
     
