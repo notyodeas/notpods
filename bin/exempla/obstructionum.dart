@@ -754,10 +754,11 @@ class Obstructionum {
         1) {
       return false;
     }
-    Transactio t = interiore.liberTransactions.singleWhere(
+    Transactio? t = interiore.liberTransactions.singleWhereOrNull(
         (swlt) =>
             swlt.interiore.transactioSignificatio ==
             TransactioSignificatio.praemium);
+    if (t == null) return true;
     if (t.interiore.outputs.length > 1) {
       return false;
     }

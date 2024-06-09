@@ -24,9 +24,6 @@ Future<Response> fossorEfectus(Request req) async {
     return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'non habes ius truncum in hac nodo producendi', message: 'you do not have the right to produce a block on this node')));
   }
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
-  if (!await Pera.isPublicaClavisDefended(argumentis!.publicaClavis, lo)) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: 'non potest meus esse efectus, quia productor tuus clavis non defenditur', message: 'can not mine an efectus, because your producer key is not defended ')));
-  }
   FossorPraecipuus fp = FossorPraecipuus();
   fp.accipere(    
     efectus: true, 
@@ -44,7 +41,7 @@ Future<Response> fossorEfectus(Request req) async {
   );
   print(fp.lptbi);
   Obstructionum incipio = await Obstructionum.accipereIncipio(directorium);
-  fp.llttbi.insert(0, Transactio.nullam(InterioreTransactio.praemium(argumentis!.publicaClavis, incipio.interiore.praemium!)));
+  if (await Pera.isPublicaClavisDefended(argumentis!.publicaClavis, lo)) fp.llttbi.insert(0, Transactio.nullam(InterioreTransactio.praemium(argumentis!.publicaClavis, incipio.interiore.praemium!)));
   final obstructionumDifficultas = await Obstructionum.utDifficultas(lo);
   List<int> on = await Obstructionum.utObstructionumNumerus(lo.last);
   BigInt numerus = await Obstructionum.numeruo(on);
