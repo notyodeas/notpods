@@ -636,7 +636,7 @@ class ParAdRimor {
                     (mlt) => mlt.interiore.identitatis)).forEach(llti.addAll);
                 if (!rtpn.identitatum.every((ei) => llti.contains(ei))) {
                   Print.nota(nuntius: 'transactions non possunt nisi per identitatem eorum removeri, si includuntur in stipitem', message: 'transactions can only be removed by their identity if they are included in a block');
-                  return;
+                  break;
                 }
                 liberTransactions.removeWhere((lt) => rtpn.identitatum.any(
                 (identitatis) =>
@@ -649,7 +649,7 @@ class ParAdRimor {
                   (mft) => mft.interiore.identitatis)).forEach(lfti.addAll);
                 if (!rtpn.identitatum.every((ei) => lfti.contains(ei))) {
                   Print.nota(nuntius: 'transactions non possunt nisi per identitatem eorum removeri, si includuntur in stipitem', message: 'transactions can only be removed by their identity if they are included in a block');
-                  return;
+                  break;
                 }
                 fixumTransactions.removeWhere((ft) => rtpn.identitatum.any(
                 (identitatis) =>
@@ -662,7 +662,7 @@ class ParAdRimor {
                   (met) => met.interiore.identitatis)).forEach(leti.addAll);
                 if (!rtpn.identitatum.every((ei) => leti.contains(ei))) {
                   Print.nota(nuntius: 'transactions non possunt nisi per identitatem eorum removeri, si includuntur in stipitem', message: 'transactions can only be removed by their identity if they are included in a block');
-                  return;
+                  break;
                 }
                 expressiTransactions.removeWhere((et) => rtpn.identitatum.any(
                 (identitatis) =>
@@ -1093,7 +1093,7 @@ class ParAdRimor {
               Print.nota(
                   nuntius: 'non iure primo de furca',
                   message: 'not a legal begin of a fork');
-              return;
+              break;
             }
             isSalvare = true;
             await sfppn.obstructionum.salvareExitus(directorium);
