@@ -6,7 +6,10 @@ This sample code handles HTTP GET requests to `/` and `/echo/<message>`
 # Running the sample
 
 ## Running with the Dart SDK
-
+install dependencies
+```
+dart pub get
+```
 run the first node
 ```
 $ dart bin/server.dart --obstructionum-directorium example --producentis 04005c510329ca3d1d08fc1ce0344bb80af9aa837943f846d17fb0c49b517bafbcdab77aee9e0eb9e7c7561951e369bb8ed67038a3b149ef9622db7da1ee613d191e4c01f35de11f2b03cd713a68c1b63bfdeedc3487c1aa74b7fa02568d463c58218dd52753e563f6022e9697a4451786eab83b2d2fd797cdaf5b9aeca1d4526053176668 --incipio-ex 01137e78de5513e580bd068841c1499782aee52ea227405672310f655748f34ae306542bf3146f529c855694a70a182ce492051031f7b8008f0857bc08f4908eb488 --novus-catena
