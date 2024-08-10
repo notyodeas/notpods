@@ -212,8 +212,8 @@ class FossorPraecipuus {
         istxs = true;
         int tsft = lfttbui.length;
         lfttbui.addAll(
-          lft.where((wft) => wft.probationem.startsWith('0' * i) && !lfti.contains(wft.interiore.identitatis)).isNotEmpty ?  
-          lft.where((wft) => wft.probationem.startsWith('0' * i) && !lfti.contains(wft.interiore.identitatis)): 
+          lftf.where((wft) => wft.probationem.startsWith('0' * i) && !lfti.contains(wft.interiore.identitatis)).isNotEmpty ?  
+          lftf.where((wft) => wft.probationem.startsWith('0' * i) && !lfti.contains(wft.interiore.identitatis)): 
           []
         );
         lfti.addAll(lfttbui.where((wft) => !lfti.contains(wft.interiore.identitatis)).map((e) => e.interiore.identitatis));
