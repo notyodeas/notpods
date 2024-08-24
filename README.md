@@ -19,6 +19,10 @@ to produce blocks you need 2 nodes run the second node with
 ```
 dart bin/server.dart --obstructionum-directorium abla --producentis 04013e14f9e16d0650ca8b2347804f5a6c7efb916aaf7be96d156347c32fc6611c206a62013873adb913e47d7480866be254e4989e5f87368110f91c93f5c571e41d5001367953bfe9978bd21b0a9ca4490f67f38c39cf231420955d6f503faad7892568196cdce1b3ff473dc20f26c72891ea65b4fef54e54f224742296ac6d81b17580d7 --rpc-portus 8081 --pervideas-portus 1224 --tabernus-nodi 127.0.0.1:8008 --sync-novus
 ```
+to restart the node
+```
+dart bin/server.dart --obstructionum-directorium abla --producentis 04013e14f9e16d0650ca8b2347804f5a6c7efb916aaf7be96d156347c32fc6611c206a62013873adb913e47d7480866be254e4989e5f87368110f91c93f5c571e41d5001367953bfe9978bd21b0a9ca4490f67f38c39cf231420955d6f503faad7892568196cdce1b3ff473dc20f26c72891ea65b4fef54e54f224742296ac6d81b17580d7 --rpc-portus 8081 --pervideas-portus 1224 --tabernus-nodi 127.0.0.1:8008 --sync-pergo
+```
 
 ## Running with Docker
 
