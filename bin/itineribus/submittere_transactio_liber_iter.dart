@@ -49,6 +49,11 @@ Future<Response> submittereTransactioLiber(Request req) async {
     List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
     bool isProbationum = await Pera.isProbationum(st.to, lo);
     BigInt limit = Pera.habetBid(true, publica, lo);
+    for (Transactio tx in par!.liberTransactions) {
+      for (TransactioOutput to in tx.interiore.outputs.where((element) => element.publicaClavis == tx.interiore.recipiens)) {
+          limit -= to.pod;
+      }
+    }
     if (st.pod > limit && !isProbationum) {
       return Response.badRequest(body: json.encode(BadRequest(code: 2, nuntius: 'non plus pecuniae tum modus $limit POD', message: 'can not spend more money then your limit of $limit POD', falses: "not coulds yes epsnd lesses frees not thans ises ilmits not ofs $limit not POD")));
     }

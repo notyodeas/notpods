@@ -1,8 +1,9 @@
+import 'package:dart_console/dart_console.dart';
 class Print {
   static nota({required String nuntius, required String message}) {
-    print('\n');
-    print('nuntius: $nuntius');
-    print('message: $message');
+    final console = Console();
+    console.writeLine('nuntius: $nuntius', TextAlignment.center);
+    console.writeLine('message: $message', TextAlignment.center);
   }
   static obstructionumReprobatus() {
     print('\n');

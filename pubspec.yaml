@@ -9,6 +9,7 @@ environment:
 dependencies:
   args: ^2.4.2
   crypto: ^3.0.3
+  dart_console: ^4.1.0
   dbcrypt: ^2.0.0
   ecdsa: ^0.0.4
   encoder: ^1.0.0
