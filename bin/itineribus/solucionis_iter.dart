@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:shelf/shelf.dart';
 import 'package:elliptic/elliptic.dart';
+import 'package:shelf_router/shelf_router.dart';
 
 import '../exempla/constantes.dart';
 import '../exempla/errors.dart';
@@ -25,7 +26,7 @@ Future<Response> solucionisSubmittereSolocionisPropter(Request req) async {
   }
   InterioreInterioreSolucionisPropter iisp = InterioreInterioreSolucionisPropter(publica, ssr.accipientis);
   InterioreSolucionisPropter isr = InterioreSolucionisPropter(privatus, iisp);
-  List<Obstructionum> lo = await Obstructionum.getBlocks(Directory('${Constantes.caudices}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
+  List<Obstructionum> lo = await Obstructionum.getBlocks(Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
   if (!isr.estValidus(lo)) {
     return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: 'Publica clavis iam usus est ad mercedem Ratio aut est receptaculum et senior solucionis Ratio', message: 'public key is already used for a payment account or is the receiver of an older payment account')));
   }
@@ -36,16 +37,40 @@ Future<Response> solucionisSubmittereSolocionisPropter(Request req) async {
   });
   return Response.ok(json.encode({
     "nuntius": "solucionis ratio exspectat in stagnum",
-    "message": "payment account is waiting in the pool"
+    "message": "payment account is waiting in the pool",
+    "signature": isr.signature
   }));
 }
 Response solucionisStagnum(Request req) {
   return Response.ok(json.encode(par!.solucionisRationibus.map((msp) => msp.toJson()).toList()));
 }
+Future<Response> solucionisStatus(Request req) async {
+  String signature = req.params['signature']!;
+  List<Obstructionum> lo = await Obstructionum.getBlocks(Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}'));
+  for (InterioreObstructionum io in lo.map((e) => e.interiore)) {
+    for (SolucionisPropter sp in io.solucionisRationibus) {
+      if (sp.interioreSolucionisPropter.signature == signature) {
+        return Response.ok(json.encode({
+        'includi': true,
+        'scriptum': sp.toJson()
+      }));
+      }
+    }
+  }
+  for (SolucionisPropter sp in par!.solucionisRationibus) {
+    if (sp.interioreSolucionisPropter.signature == signature) {
+      return Response.ok(json.encode({
+        'includi': false,
+        'scriptum': sp.toJson()
+      }));
+    }
+  }
+  return Response.notFound("");
+}
 Future<Response> solucionisCashEx(Request req) async {
   SolucionisCashEx sce = SolucionisCashEx.fromJson(await json.decode(await req.readAsString()));
   String publica = PrivateKey.fromHex(Pera.curve(), sce.ex).publicKey.toHex();
-  Directory directorium = Directory('${Constantes.caudices}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
+  Directory directorium = Directory('${Constantes.vincula}/${argumentis!.obstructionumDirectorium}${Constantes.principalis}');
   List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
   SolucionisPropter sp = SolucionisPropter.accipere(publica, lo);
   BigInt mittere = await Pera.statera(sce.liber, publica, lo);
@@ -57,7 +82,12 @@ Future<Response> solucionisCashEx(Request req) async {
     isolates.fixumTxIsolates[it.identitatis] = await Isolate.spawn(Transactio.quaestum, List<dynamic>.from([it, rp.sendPort]));
   }
   rp.listen((transactio) {
-    par!.syncLiberTransaction(transactio as Transactio);
+    Transactio tx = transactio as Transactio;
+    if(tx.interiore.liber) {
+      par!.syncLiberTransaction(transactio);
+    } else {
+      par!.syncFixumTransaction(transactio);
+    }
   });
   return Response.ok(json.encode({
     "nuntius": "solucionis negotium exspectat in stagnum",

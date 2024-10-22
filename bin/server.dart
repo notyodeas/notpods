@@ -99,6 +99,7 @@ final _router = Router().plus
   ..post('/furca-sync/<probationem>', furcaSync)
   ..post('/solucionis-submittere-solocionis-propter', solucionisSubmittereSolocionisPropter)
   ..get('/solucionis-stagnum', solucionisStagnum)
+  ..get('/solucionis-status/<signature>', solucionisStatus)
   ..post('/solucionis-cash-ex', solucionisCashEx)
   ..post('/solucionis-submittere-fissile-solocionis-propter', solucionisSubmittereFissileSolocionisPropter)
   ..get('/solucionis-fissile-stagnum', solucionisFissileStagnum)
