@@ -347,28 +347,45 @@ class ParAdRimor {
             break;
           }
           case PervideasNuntiusTitulus.fixumTransactio: {
-            // FixumTransactioPervideasNuntius ftpn =
-            //   FixumTransactioPervideasNuntius.ex(
-            //       Encoder.decodeJson(eventus) as Map<String, dynamic>);
-            // List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
-            // if (await ftpn.transactio
-            //         .convalidandumTransaction(null, TransactioGenus.fixum, fixumTransactions, lo) &&
-            //     ftpn.transactio.isFurantur() &&
-            //     !ftpn.transactio.validateProbationem() && ftpn.transactio.minusQuamBidInProbationibus(fixumTransactions, lo)) {
-            //   if (fixumTransactions.any((aft) =>
-            //       aft.interiore.identitatis ==
-            //       ftpn.transactio.interiore.identitatis)) {
-            //     fixumTransactions.removeWhere((rwft) =>
-            //         rwft.interiore.identitatis ==
-            //         ftpn.transactio.interiore.identitatis);
-            //   }
-            //   fixumTransactions.add(ftpn.transactio);
-            //   if (!pn.accepit.contains(ip)) {
-            //     pn.accepit.add(ip);
-            //   }
-            //   syncThrough(TransactioGenus.fixum, ftpn.transactio, pn.accepit);
-            // }
-            // break;
+            FixumTransactioPervideasNuntius ftpn =
+              FixumTransactioPervideasNuntius.ex(
+                  Encoder.decodeJson(qi.msg) as Map<String, dynamic>);
+            List<Obstructionum> lo = await Obstructionum.getBlocks(directorium);
+            List<Transactio> ltc = List<Transactio>.from(fixumTransactions.map((mlt) => Transactio.fromJson(mlt.toJson())));
+            ltc.add(ftpn.transactio);
+            if (await convalidandumLiber(ltc, lo)) {
+              if (fixumTransactions.any((aft) =>
+                  aft.interiore.identitatis ==
+                  ftpn.transactio.interiore.identitatis)) {
+                    
+                Transactio lt = fixumTransactions.singleWhere((swlt) => swlt.interiore.identitatis == ftpn.transactio.interiore.identitatis);
+                int zerosOld = 0;
+                for (int i = 1; i < lt.probationem.length; i++) {
+                  if (lt.probationem.substring(0, i) == ('0' * i)) {
+                    zerosOld += 1;
+                  }
+                }
+                int zerosNew = 0;
+                for (int i = 1; i < ftpn.transactio.probationem.length; i++) {
+                  if (ftpn.transactio.probationem.substring(0, i) == ('0' * i)) {
+                    zerosNew += 1;
+                  }
+                }
+                if (zerosNew <= zerosOld) {
+                  Print.nota(nuntius: 'non habes ius pro hac re in transactione piscinae', message: 'you do not have the right to replace this transaction in the transaction pool');
+                  break;
+                }
+                fixumTransactions.removeWhere((rwft) =>
+                    rwft.interiore.identitatis ==
+                    ftpn.transactio.interiore.identitatis);
+              }
+              fixumTransactions.add(ftpn.transactio);
+              if (!pn.accepit.contains(ip)) {
+                pn.accepit.add(ip);
+              }
+              syncThrough(TransactioGenus.fixum, ftpn.transactio, pn.accepit);
+            }
+            break;
           }
           case PervideasNuntiusTitulus.expressiTransactio: {
             ExpressiTransactioPervideasNuntius etpn =
