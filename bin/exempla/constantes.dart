@@ -226,6 +226,7 @@ class PervideasNuntiusCasibus {
   static String current = 'current';
   static String lymphaticorum = 'lymphaticorum';
   static String remove = 'remove';
+  static String isMajor = 'is-major';
 }
 
 class PervideasNuntiusTitulus {

@@ -7,6 +7,7 @@ import 'package:crypto/crypto.dart';
 import 'package:ecdsa/ecdsa.dart';
 import 'package:elliptic/elliptic.dart';
 import 'package:hex/hex.dart';
+import 'package:shelf/shelf_io.dart';
 import '../auxiliatores/print.dart';
 import '../server.dart';
 import 'constantes.dart';
@@ -15,6 +16,7 @@ import 'pera.dart';
 import 'transactio.dart';
 import 'utils.dart';
 import 'package:encoder/encoder.dart';
+import 'package:collection/collection.dart';
 
 class SiRemotionemInput {
   String signatureInput;
@@ -306,12 +308,18 @@ class SiRemotionem {
     List<SiRemotionem> lsr = [];
     lo.map((mlo) => mlo.interiore.siRemotiones
     .where((wsr) => wsr.interiore.siRemotionemOutput != null)).forEach(lsr.addAll);
+    List<SiRemotionem> lsrr = [];
+    lo.map((mlo) => mlo.interiore.siRemotiones.where((wsr) => wsr.interiore.siRemotionemInput != null)).forEach(lsrr.addAll);
+    lsr.removeWhere((rwlsr) => lsrr.any((alsrr) => alsrr.interiore.siRemotionemInput?.siRemotionemSignature == rwlsr.interiore.signatureInterioreSiRemotionem));
     print('lsrtmp \n ${lsr.map((e) => e.toJson())}');
     return lsr.where((wlsr) => debita ? wlsr.interiore.siRemotionemOutput!.debetur == publica : wlsr.interiore.siRemotionemOutput!.habereIus == publica);
   }  
   static bool habetProfundum(bool liber, String publica, List<Obstructionum> lo) {
     List<SiRemotionem> lsr = [];
     lo.map((mo) => mo.interiore.siRemotiones.where((wsr) => wsr.interiore.siRemotionemOutput != null && wsr.interiore.siRemotionemOutput?.liber == liber)).forEach(lsr.addAll);
+    List<SiRemotionem> lsrr = [];
+    lo.map((mlo) => mlo.interiore.siRemotiones.where((wsr) => wsr.interiore.siRemotionemInput != null)).forEach(lsrr.addAll);
+    lsr.removeWhere((rwlsr) => lsrr.any((alsrr) => alsrr.interiore.siRemotionemInput?.siRemotionemSignature == rwlsr.interiore.signatureInterioreSiRemotionem));
     return lsr.any((asr) => asr.interiore.siRemotionemOutput!.debetur == publica);
   }
   static SiRemotionem exInitus(String signature, List<Obstructionum> lo) {
@@ -319,7 +327,19 @@ class SiRemotionem {
     print(signature);
     List<SiRemotionem> lsr = [];
     lo.map((mo) => mo.interiore.siRemotiones).forEach(lsr.addAll);
-    return lsr.singleWhere((wsr) => (wsr.interiore.signatureInterioreSiRemotionem == signature && wsr.interiore.siRemotionemOutput != null) || (wsr.interiore.siRemotionemInput != null && wsr.interiore.siRemotionemInput!.siRemotionemSignature == signature));
+    return lsr.firstWhere((wsr) => (wsr.interiore.signatureInterioreSiRemotionem == signature && wsr.interiore.siRemotionemOutput != null) || (wsr.interiore.siRemotionemInput != null && wsr.interiore.siRemotionemInput!.siRemotionemSignature == signature));
+  }
+  static SiRemotionem novissimeExInitus(String signature, List<Obstructionum> lo) {
+    print(' \n tell me signature \ n');
+    print(signature);
+    List<SiRemotionem> lsr = [];
+    lo.map((mo) => mo.interiore.siRemotiones).forEach(lsr.addAll);
+    return lsr.lastWhere((wsr) => (wsr.interiore.signatureInterioreSiRemotionem == signature && wsr.interiore.siRemotionemOutput != null) || (wsr.interiore.siRemotionemInput != null && wsr.interiore.siRemotionemInput!.siRemotionemSignature == signature));
+  }
+  static SiRemotionem? captoIdentitatis(String identitatis, List<Obstructionum> lo) {
+    List<SiRemotionem> lsr = [];
+    lo.map((mo) => mo.interiore.siRemotiones).forEach(lsr.addAll);
+    return lsr.singleWhereOrNull((swsr) => (swsr.interiore.siRemotionemOutput?.transactioIdentitatis == identitatis) || (swsr.interiore.siRemotionemInput?.transactioIdentitatis == identitatis));
   }
 
   static void quaestum(List<dynamic> argumentis) {

@@ -395,17 +395,26 @@ class ObstructionumPervideasNuntius extends PervideasNuntius {
 
 class PetitioObstructionumPervideasNuntius extends PervideasNuntius {
   String probationem;
+  // bool isMajor;
+  // int numerus;
   PetitioObstructionumPervideasNuntius(
       this.probationem, String titulust, List<String> accepit)
       : super(titulust, accepit);
+  // PetitioObstructionumPervideasNuntius.major(
+  //     this.probationem, this.isMajor, this.numerus, String titulust, List<String> accepit)
+  //     : super(titulust, accepit);
   PetitioObstructionumPervideasNuntius.ex(Map<String, dynamic> nuntius)
       : probationem = nuntius[PervideasNuntiusCasibus.probationem].toString(),
+        // isMajor = nuntius[PervideasNuntiusCasibus.isMajor],
+        // numerus = nuntius[PervideasNuntiusCasibus.numerus],
         super.ex(nuntius);
   @override
   Map<String, dynamic> indu() => {
         PervideasNuntiusCasibus.probationem: probationem,
         PervideasNuntiusCasibus.titulus: titulus,
         PervideasNuntiusCasibus.accepit: accepit,
+        // PervideasNuntiusCasibus.isMajor: isMajor,
+        // PervideasNuntiusCasibus.numerus: numerus
       };
 }
 

@@ -81,7 +81,7 @@ Future<Response> fossorEfectus(Request req) async {
     await par!.syncBlock(obstructionum);
     await par!.removeLiberTransactions(obstructionum.interiore.liberTransactions.map((e) => e.interiore.identitatis).toList());
     await par!.removeFixumTransactions(obstructionum.interiore.fixumTransactions.map((e) => e.interiore.identitatis).toList());
-    
+    // await par!.removeSiRemotionems(obstructionum.interiore.siRemotiones.map((e) => e.interiore.signatureInterioreSiRemotionem!).toList());
   });
   return Response.ok(json.encode({
     "nuntius": "coepi efectus fossores",

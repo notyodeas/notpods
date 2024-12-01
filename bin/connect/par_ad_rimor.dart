@@ -43,6 +43,10 @@ class RemoveTransactionsPervideasNuntius extends PervideasNuntius {
     PervideasNuntiusCasibus.accepit: accepit
   };
 }
+class RemoveSiRemotionemPervideasNuntius extends PervideasNuntius {
+  List<String> signatures;
+  RemoveSiRemotionemPervideasNuntius(this.signatures, String titulust, List<String> accepit): super (titulust, accepit);
+}
 
 class QueueItem  {
   Socket clientis;
@@ -1735,6 +1739,18 @@ class ParAdRimor {
           [ip]).indu()));
       nervus.destroy();
   }
+  // Future removeSiRemotionems(List<String> signatures) async {
+  //   siRemotiones.removeWhere((s) => signatures.any((si) => si == s.interiore.signatureInterioreSiRemotionem) || signatures.any((sii) => sii == s.interiore.siRemotionemInput?.siRemotionemSignature));
+  //   await filterOnline();
+  //   List<String> acceptum = bases.where((wbases) => wbases != ip).toList();
+  //   if (acceptum.isEmpty) {
+  //     return;
+  //   }
+  //   String nervuss = acceptum[random.nextInt(acceptum.length)];
+  //   Socket nervus = await Socket.connect(
+  //       nervuss.split(':')[0], int.parse(nervuss.split(':')[1]));
+    
+  // }
   // proof you are the owner too
   Future removeConnexaLiberExpressis(List<String> identitatum) async {
     connexiaLiberExpressis.removeWhere((cle) => identitatum.any((identitatis) =>

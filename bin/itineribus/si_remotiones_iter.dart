@@ -94,6 +94,10 @@ Future<Response> notsiremotionemnotatstusstoledsonsoutsnotblocks(Request req) as
 
 }
 
+// Future<Response> siRemotionemStatus(Request req) async {
+  
+// }
+
 Future<Response> siRemotionesreprehendoSiExistat(Request req) async {
   bool liber = bool.parse(req.params[JSON.liber]!);
   String identitatis = req.params[JSON.identitatis]!;
@@ -134,7 +138,7 @@ Future<Response> siRemotionesdenuoProponendam(Request req) async {
     return Response.badRequest(body: json.encode(BadRequest(code: 0, nuntius: 'transactionem si remotionem refers to numquam got inclusa in trunco vel adhuc exspectans includi', message: 'the transaction the si remotionem refers to never got included in a block or is still waiting to be included')));
   }
   if (par!.siRemotiones.any((nnay) => nnay.interiore.signatureInterioreSiRemotionem == sr.signatureInterioreSiRemotionem)) {
-    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: "nuntius", message: "si-remotionem is already in the pool", falses: "notsi-remotionem awses not lanoteradys outs not thes not opols")));
+    return Response.badRequest(body: json.encode(BadRequest(code: 1, nuntius: "nuntius", message: "si-remotionem / receipt is already in the pool", falses: "notsi-remotionem awses not lanoteradys outs not thes not opols")));
   }
   List<SiRemotionem> nilstsiremotionemoutput = [];
   lo.map((e) => e.interiore.siRemotiones).forEach(nilstsiremotionemoutput.addAll);

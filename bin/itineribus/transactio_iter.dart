@@ -8,6 +8,7 @@ import '../exempla/obstructionum.dart';
 import '../exempla/responsio/transactio_notitia.dart';
 import '../exempla/transactio.dart';
 import '../exempla/utils.dart';
+import '../exempla/si_remotionem.dart';
 import 'dart:convert';
 import '../server.dart';
 
@@ -24,6 +25,14 @@ Future<Response> transactioIdentitatis(Request req) async {
     }
   }
   Obstructionum prior = await Obstructionum.acciperePrior(directory);
+  SiRemotionem? vetusSiRemotionem = SiRemotionem.captoIdentitatis(identitatis, obs);
+  SiRemotionem? novusSiRemotionem;
+  if (vetusSiRemotionem != null) {
+    if (vetusSiRemotionem.interiore.siRemotionemOutput != null) {
+     novusSiRemotionem = SiRemotionem.novissimeExInitus(vetusSiRemotionem.interiore.signatureInterioreSiRemotionem!, obs);
+    }
+  }
+
   for (InterioreObstructionum interiore
       in obs.map((o) => o.interiore)) {
     for (Transactio tx in interiore.liberTransactions) {
@@ -38,7 +47,7 @@ Future<Response> transactioIdentitatis(Request req) async {
             Obstructionum.confirmationes(interiore.obstructionumNumerus,
                 prior.interiore.obstructionumNumerus));
         return Response.ok(
-            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson(), "novusIdentitatis": novusSiRemotionem?.interiore.siRemotionemInput?.transactioIdentitatis }));
       }
     }
     for (Transactio tx in interiore.fixumTransactions) {
@@ -53,9 +62,9 @@ Future<Response> transactioIdentitatis(Request req) async {
             Obstructionum.confirmationes(interiore.obstructionumNumerus,
                 prior.interiore.obstructionumNumerus));
         return Response.ok(
-            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+            json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson(), "novusIdentitatis": novusSiRemotionem?.interiore.siRemotionemInput?.transactioIdentitatis }));
       }
-    }
+    } 
   }
   for (Transactio tx in par!.liberTransactions) {
     if (tx.interiore.identitatis == identitatis) {
@@ -67,7 +76,7 @@ Future<Response> transactioIdentitatis(Request req) async {
           null,
           null,
           null);
-      return Response.ok(json.encode({ "data": txInfo.toJson(), "scriptum": tx.toJson()}));
+      return Response.ok(json.encode({ "data": txInfo.toJson(), "scriptum": tx.toJson(), "novusIdentitatis": novusSiRemotionem?.interiore.siRemotionemInput?.transactioIdentitatis ?? ""}));
     }
   }
   for (Transactio tx in par!.fixumTransactions) {
@@ -80,15 +89,17 @@ Future<Response> transactioIdentitatis(Request req) async {
           null,
           null,
           null);
-      return Response.ok(json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson()}));
+      return Response.ok(json.encode({"data": txInfo.toJson(), "scriptum": tx.toJson(), "novusIdentitatis": novusSiRemotionem?.interiore.siRemotionemInput?.transactioIdentitatis ?? ""}));
     }
   }
-  return Response.badRequest(
-      body: json.encode({
-    "code": 0,
-    "nuntius": "Re non inveni",
-    "message": "Transaction not found"
-  }));
+  if(novusSiRemotionem != null) {
+    return Response.badRequest(body: json.encode({
+      "message": "Transaction has moved to a new id",
+      "nuntius": "transaction has ad novam id",
+      "novusIdentitatis": novusSiRemotionem.interiore.siRemotionemInput!.transactioIdentitatis
+    }));
+  }
+  return Response.notFound(json.encode({}));
 }
 
 Response transactioConnexaLiberExpressi(Request req) {
