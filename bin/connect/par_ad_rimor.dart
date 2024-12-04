@@ -1843,7 +1843,7 @@ class ParAdRimor {
     }
     reprehendoSummaScandalumNumero(o);
     List<Socket> lsn = [];
-    String nervuss = bases.where((wb) => wb != ip).toList()[random.nextInt(bases.length)];
+    String nervuss = bases.where((wb) => wb != ip).toList()[random.nextInt(bases.where((wb) => wb != ip).length)];
     Socket nervus = await Socket.connect(
           nervuss.split(':')[0], int.parse(nervuss.split(':')[1]));
     nervus.write(Encoder.encodeJson(ObstructionumPervideasNuntius(
